@@ -35,7 +35,9 @@ form.addEventListener('submit', async (e) => {
 			// Nota: para e ste caso se enviaria el programa con comentarios incluidos.
 			// se crea el objeto enviando la memoria y el kernel, ademas de las instruccion
 			// con comentarios y las que no tiene comentarios.
-
+			const memory = new Array(10);
+			// crear el array del  kernel
+			const kernel = new Array(5);
 			programa = new Interprete([], fileContent, lines, []);
 			// se procede a ejecutar el programa.
 

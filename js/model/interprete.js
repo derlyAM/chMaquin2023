@@ -14,9 +14,10 @@ export class Interprete {
     cargarPrograma(memoria,indicador){
         // inicializar el valor del acomulador
         // este siempre va en la posicion cero de la memoria
+        let tamañoMemoria = this.memoria.length
         if(indicador==0){
         let acumulador = 0;       
-
+        
         // guardar el acomulador
         this.memoria.push(acumulador)
         // cargar el kernel en memoria 
@@ -33,6 +34,11 @@ export class Interprete {
         let infEtiq = []
         //cargar variables
         let retornCreaVar = this.creacionVariables(memoria);
+
+        if(memory.length>tamañoMemoria){
+            throw new Error(`el tamaño de la memoria se excede`);
+
+        }
         // actualizamos memoria y info de variables
         memoria = retornCreaVar[0]
         infVariable = retornCreaVar[1]
