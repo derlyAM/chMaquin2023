@@ -1,7 +1,7 @@
 //import {Operaciones} from "./operaciones";
 
 export class Interprete {
-
+ 
     constructor(memoria, instrucciones, instComment,kernel){
         this.memoria = memoria;
         this.instrucciones = instrucciones;
@@ -9,29 +9,32 @@ export class Interprete {
         this.instComment = instComment;
 
     }
+    
 
-    cargarPrograma(){
+    cargarPrograma(memoria,indicador){
         // inicializar el valor del acomulador
         // este siempre va en la posicion cero de la memoria
+        if(indicador==0){
         let acumulador = 0;       
 
         // guardar el acomulador
         this.memoria.push(acumulador)
         // cargar el kernel en memoria 
         this.memoria = this.memoria.concat(this.kernel);
+        }
         // cargar las intrucciones en memoria
         this.memoria = this.memoria.concat(this.instrucciones);
         console.log("esto tiene la memoria--->",this.memoria)
         // guardamos la memoria en una vriable
-        let memory = this.memoria
+        memoria = this.memoria
         // info de las variables
         let infVariable = []
         // info de las etiquetas
         let infEtiq = []
         //cargar variables
-        let retornCreaVar = this.creacionVariables(memory);
+        let retornCreaVar = this.creacionVariables(memoria);
         // actualizamos memoria y info de variables
-        memory = retornCreaVar[0]
+        memoria = retornCreaVar[0]
         infVariable = retornCreaVar[1]
         
         const div = document.getElementById("miArray");
@@ -40,16 +43,19 @@ export class Interprete {
         const divInstructions = document.getElementById("instructions");
         //divInstructions.innerHTML = this.instrucciones.join(", ");
         //cargar etiquetas
-        let returnEti = this.crearEtiquetas(memory);
+        let returnEti = this.crearEtiquetas(memoria);
         // actualizamos memoria y info de variables        
         infEtiq = returnEti
         
-        console.log("ESTA ES LA MEMORIA----->",memory)
+        console.log("ESTA ES LA MEMORIA----->",memoria)
         console.log("AQUI DEBERIA ESTAR TODA LA INFO DE LAS ETIQUETAAS----->",infEtiq)
         console.log("AQUI DEBERIA ESTAR TODA LA INFO DE LAS VARIALES----->",infVariable)
         let runInstrc = this.instComment
-
-        this.runPrograma(memory,runInstrc,infEtiq,infVariable);
+        let returnArray=[memoria,runInstrc,infEtiq,infVariable];
+        
+        return returnArray;
+        //this.runPrograma(memory,runInstrc,infEtiq,infVariable);
+        
         
     }
 
@@ -82,8 +88,11 @@ export class Interprete {
             }
 
             else if (inst[0]==="retorne"){
-                console.log("EL PROGRAMA TERMINO")
-                return
+                console.log("EL PROGRAMA TERMINÓ")
+                memory[0]=0;
+                if(i=runinstrc.length-1){
+                    return
+                }
             }
 
             else if (operaNumeros.includes(inst[0])){
