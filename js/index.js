@@ -10,12 +10,12 @@ const fileInput = document.querySelector('#file-input');
 
 form.addEventListener('submit', async (e) => {
 	e.preventDefault();
-	const file = fileInput.files[0];
-    console.log("este es el archivo leido---->",file)
+	const files = fileInput.files;
+    console.log("este es el archivo leido---->",files)
 	try {
 		const reader = new lineByLineFileReader();
 		// obtener el array con las instruccines.
-		const lines = await reader.read(file);
+		const lines = await reader.read(files);
 		console.log(lines);
         // obtener la lectura del archivo sin comentarios
         const validation = new Validation(lines);
