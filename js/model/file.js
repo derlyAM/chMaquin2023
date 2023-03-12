@@ -27,7 +27,8 @@ export class lineByLineFileReader {
               console.log("linea esta vacia-->",i);
               rows[i]="//"
             }
-            lines.push(rows[i]);
+            rows[i] = rows[i].replace(/\s+/g, " ");
+            lines.push(rows[i].trim());
           }
           resolve(lines);
         };

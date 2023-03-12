@@ -1,7 +1,7 @@
 //import {Operaciones} from "./operaciones";
 
 export class Interprete {
- 
+    
     constructor(memoria, instrucciones, instComment,kernel, tamanioMemoria){
         this.memoria = memoria;
         this.instrucciones = instrucciones;
@@ -105,6 +105,11 @@ export class Interprete {
                 infVariable = result[1];
             }
 
+            else if (operaString.includes(inst[0])){
+                let result = this.funOperStr(runinstrc[i],memory)
+                memory = result;                
+            }
+
             else if (logicas.includes(inst[0])){
                 let result = this.funLogic(runinstrc[i],memory,infVariable)
                 memory = result[0];
@@ -146,14 +151,6 @@ export class Interprete {
 
             else if (instruc.includes(inst[0])){
                 let result = this.funInstruc(runinstrc[i],memory,infVariable)
-                memory = result[0];
-                infVariable = result[1];
-            }
-
-            //faltan las de abajo
-
-            else if (operaString.includes(inst[0])){
-                let result = this.funOperNum(runinstrc[i],memory,infVariable)
                 memory = result[0];
                 infVariable = result[1];
             }
@@ -351,9 +348,16 @@ export class Interprete {
                     memory[0] = memory[0] ** jsonVariable[0].valor
                 }
             break; 
-            case "modulo":
-                console.log("OJO FALTA  DEFINIR MODULO")
-            break;           
+            case "modulo":   
+                let valor = parseInt(inst[1])
+                if (!isNaN(valor)) {
+                    // cambiamos el valor del acumulador por la opercion ya echa
+                    memory[0] = memory[0]%inst[1];                    
+                }else{
+                    throw new Error(`el parametro pasado a la funcion "modulo" no es valido`);
+                }              
+            break; 
+            
             default:
             console.log("No es una instruccion valida");
             break;
@@ -554,6 +558,51 @@ export class Interprete {
 
     }
 
-    funOperStr(instruccion,memory,infVariable){}
+    funOperStr(instruccion,memory){
+
+        let inst =  instruccion.split(" ");
+
+        // extraer el valor que viene en el acomulador hasta el momento
+        let valorAcumulador = memory[0];
+        // valor de la instruccion
+        let valorInstruc = inst[1];
+        // guardar el resultado de la operación.
+        let resultado;
+        switch (inst[0]) {
+            case "concatene":                
+                // resultado
+                resultado = valorAcumulador + valorInstruc;
+                
+                break;
+
+            case "elimine":
+                let string = this.acumulador;
+                let substringsToRemove = [valorInstruc];
+
+                let regex = new RegExp(substringsToRemove.join("|"), "g");
+
+                resultado = string.replace(regex, "");
+
+                break;
+            case "extraiga":
+                // extraer de la instruccion la cantidad de caracteres a extraer
+                let cantCarac = parseInt(valorInstruc)
+                if (!isNaN(cantCarac)) {
+                    resultado = valorAcumulador.substring(0, cantCarac);
+                    
+                }else{
+                    throw new Error(`el parametro pasado a la funcion "extraiga" no es valido`);
+                }
+                
+                break;
+        
+            default:
+                break;            
+        }
+        // cambiamos el valor del acumulador en la memoria
+        memory[0] = resultado;
+
+        return memory
+    }
 
 }
