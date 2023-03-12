@@ -53,9 +53,14 @@ form.addEventListener('submit', async (e) => {
 			console.error(err);
 		}
 	}
+	let bandera=false
 	for (let index = 0; index < instrucciones.length; index++) {
+
+    if(index===instrucciones.length-1){
+		bandera=true
+	}
 	//programa.runPrograma(memoria, instrucciones[index], infEtiquetas[index], infoVariables[index]);
-		linea.runLineaLinea(memoria, instrucciones[index], infEtiquetas[index], infoVariables[index]);		
+		await linea.runLineaLinea(memoria, instrucciones[index], infEtiquetas[index], infoVariables[index], bandera);	
 	}
 
 });
