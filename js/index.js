@@ -16,6 +16,7 @@ form.addEventListener('submit', async (e) => {
 	let instrucciones = [];
 	let infEtiquetas = [];
 	let infoVariables = [];
+	let linea = new LineaPrueba(); 
 
 	for (let index = 0; index < fileInput.files.length; index++) {
 		const file = fileInput.files[index];
@@ -35,12 +36,13 @@ form.addEventListener('submit', async (e) => {
 			// Nota: para e ste caso se enviaria el programa con comentarios incluidos.
 			// se crea el objeto enviando la memoria y el kernel, ademas de las instruccion
 			// con comentarios y las que no tiene comentarios.
-			const memory = new Array(10);
+			const memory = new Array();
 			// crear el array del  kernel
-			const kernel = new Array(5);
-			programa = new Interprete([], fileContent, lines, []);
+			const kernel = new Array(5).fill('JuanDiegoKernel');
+			const tamanioMemoria = 1000
+			programa = new Interprete([], fileContent, lines, kernel, tamanioMemoria);
 			// se procede a ejecutar el programa.
-
+			
 			correrPrograma = programa.cargarPrograma(memoria, index);
 			memoria = [...memoria, ...correrPrograma[0]]
 			instrucciones.push(correrPrograma[1])
@@ -52,9 +54,8 @@ form.addEventListener('submit', async (e) => {
 		}
 	}
 	for (let index = 0; index < instrucciones.length; index++) {
-	programa.runPrograma(memoria, instrucciones[index], infEtiquetas[index], infoVariables[index]);
-		
-		
+	//programa.runPrograma(memoria, instrucciones[index], infEtiquetas[index], infoVariables[index]);
+		linea.runLineaLinea(memoria, instrucciones[index], infEtiquetas[index], infoVariables[index]);		
 	}
 
 });

@@ -2,19 +2,18 @@
 
 export class Interprete {
  
-    constructor(memoria, instrucciones, instComment,kernel){
+    constructor(memoria, instrucciones, instComment,kernel, tamanioMemoria){
         this.memoria = memoria;
         this.instrucciones = instrucciones;
         this.kernel = kernel;
         this.instComment = instComment;
-
+        this.tamanioMemoria = tamanioMemoria
     }
     
 
-    cargarPrograma(memoria,indicador){
+    cargarPrograma(memoria1,indicador){
         // inicializar el valor del acomulador
         // este siempre va en la posicion cero de la memoria
-        let tamañoMemoria = this.memoria.length
         if(indicador==0){
         let acumulador = 0;       
         
@@ -27,37 +26,36 @@ export class Interprete {
         this.memoria = this.memoria.concat(this.instrucciones);
         console.log("esto tiene la memoria--->",this.memoria)
         // guardamos la memoria en una vriable
-        memoria = this.memoria
+        memoria1 = this.memoria
         // info de las variables
         let infVariable = []
         // info de las etiquetas
         let infEtiq = []
         //cargar variables
-        let retornCreaVar = this.creacionVariables(memoria);
+        let retornCreaVar = this.creacionVariables(memoria1);
 
-        if(memory.length>tamañoMemoria){
+        // actualizamos memoria y info de variables
+        memoria1 = retornCreaVar[0]
+        infVariable = retornCreaVar[1]
+        if(memoria1.length>this.tamanioMemoria){
             throw new Error(`el tamaño de la memoria se excede`);
 
         }
-        // actualizamos memoria y info de variables
-        memoria = retornCreaVar[0]
-        infVariable = retornCreaVar[1]
-        
         const div = document.getElementById("miArray");
         //div.innerHTML = memory.join(", ");
 
         const divInstructions = document.getElementById("instructions");
         //divInstructions.innerHTML = this.instrucciones.join(", ");
         //cargar etiquetas
-        let returnEti = this.crearEtiquetas(memoria);
+        let returnEti = this.crearEtiquetas(memoria1);
         // actualizamos memoria y info de variables        
         infEtiq = returnEti
         
-        console.log("ESTA ES LA MEMORIA----->",memoria)
+        console.log("ESTA ES LA MEMORIA----->",memoria1)
         console.log("AQUI DEBERIA ESTAR TODA LA INFO DE LAS ETIQUETAAS----->",infEtiq)
         console.log("AQUI DEBERIA ESTAR TODA LA INFO DE LAS VARIALES----->",infVariable)
         let runInstrc = this.instComment
-        let returnArray=[memoria,runInstrc,infEtiq,infVariable];
+        let returnArray=[memoria1,runInstrc,infEtiq,infVariable];
         
         return returnArray;
         //this.runPrograma(memory,runInstrc,infEtiq,infVariable);

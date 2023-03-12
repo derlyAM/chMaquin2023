@@ -8,78 +8,32 @@ export class LineaPrueba {
         this.instComment = instComment;      
     }
 
-    cargarPrograma(){
-
-        console.log("entro al programa")
-        // inicializar el valor del acomulador
-        // este siempre va en la posicion cero de la memoria
-        let acumulador = 0;       
-
-        // guardar el acomulador
-        this.memoria.push(acumulador)
-        // cargar el kernel en memoria 
-        this.memoria = this.memoria.concat(this.kernel);
-        // cargar las intrucciones en memoria
-        this.memoria = this.memoria.concat(this.instrucciones);
-        console.log("esto tiene la memoria--->",this.memoria)
-        // guardamos la memoria en una vriable
-        let memory = this.memoria
-        // info de las variables
-        let infVariable = []
-        // info de las etiquetas
-        let infEtiq = []
-        //cargar variables
-        let retornCreaVar = this.creacionVariables(memory);
-        // actualizamos memoria y info de variables
-        memory = retornCreaVar[0]
-        infVariable = retornCreaVar[1]
-        
-        const div = document.getElementById("miArray");
-        //div.innerHTML = memory.join(", ");
-
-        const divInstructions = document.getElementById("instructions");
-        //divInstructions.innerHTML = this.instrucciones.join(", ");
-        //cargar etiquetas
-        let returnEti = this.crearEtiquetas(memory);
-        // actualizamos memoria y info de variables        
-        infEtiq = returnEti
-        
-        console.log("ESTA ES LA MEMORIA----->",memory)
-        console.log("AQUI DEBERIA ESTAR TODA LA INFO DE LAS ETIQUETAAS----->",infEtiq)
-        console.log("AQUI DEBERIA ESTAR TODA LA INFO DE LAS VARIALES----->",infVariable)
-        let runInstrc = this.instComment
-
-        this.runLineLinea(memory,runInstrc,infEtiq,infVariable);
-        
-    }
-
-    runLineLinea(memory,runInstrc,infEtiq,infVariable){        
-
-        //que se quede en este proceso hasta que sea el final del programa
-        let finProg = true
+    runLineaLinea(memory,runInstrc,infEtiq,infVariable){
+        let valorButton = document.getElementById("nextButton")
+        if (this.index = 0) {
+            valorButton.disabled = false;
+        }
 
         // Obtener el elemento div correspondiente al cuadro
 		const box = document.getElementById("box");
-
-		// Crear un array con contenido
-		const array = runInstrc;
-
 		// Inicializar el índice del array a 0
 		//let index = 0;
 
         // Mostrar el primer elemento del array en el cuadro al cargar la página
 		this.showElement(memory, runInstrc, infEtiq, infVariable,this.index);
-        this.index = this.index+1;
         // Agregar un evento de clic al botón para avanzar al siguiente elemento
-        let valorButton = document.getElementById("nextButton")
         valorButton.addEventListener("click",
-        ()=>{
+        (e)=>{
+            e.preventDefault();
+            console.log('HAS DADO CLICK');
+            console.log(runInstrc);
             this.showElement(memory, runInstrc, infEtiq, infVariable,this.index)
             this.index = this.index+1;
 
             // Comprobar si se ha alcanzado el final del array
-            if (this.index > array.length-1) {
-                valorButton.disabled = true;                
+            if (this.index > runInstrc.length-1) {
+                valorButton.disabled = true;  
+                this.index=0              
             }
 
             return;
@@ -130,7 +84,10 @@ export class LineaPrueba {
 
         else if (inst[0]==="retorne"){
             console.log("EL PROGRAMA TERMINO")
-            return
+            memory[0]=0;
+            if(i=runinstrc.length-1){
+                return
+            }
         }
 
         else if (operaNumeros.includes(inst[0])){
