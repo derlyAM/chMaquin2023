@@ -4,7 +4,6 @@ no debería funcionar
 -- leer por pantalla. 👌🏽
 -- validacion de espacio 👌🏽
 -- programar la funcion para operaciones entre cadenas.
--- no puede utilizarse mas de lo que hay de espacio en memoria.
+-- no puede utilizarse mas de lo que hay de espacio en memoria.  👌🏽
 -- la funcion personalizadad por estudiante.
--- cargar mas de un programa.
--- hacer instruccion linea por linea.
+-- cargar mas de un programa. 👌🏽
