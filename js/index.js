@@ -53,15 +53,19 @@ form.addEventListener('submit', async (e) => {
 			console.error(err);
 		}
 	}
+	
+	instrucciones = [].concat.apply([], instrucciones);
+	
 	let bandera=false
-	for (let index = 0; index < instrucciones.length; index++) {
+	/*for (let index = 0; index < infoVariables.length; index++) {
 
     if(index===instrucciones.length-1){
 		bandera=true
 	}
-	programa.runPrograma(memoria, instrucciones[index], infEtiquetas[index], infoVariables[index]);
-		// await linea.runLineaLinea(memoria, instrucciones[index], infEtiquetas[index], infoVariables[index], bandera);	
-	}
+	//programa.runPrograma(memoria, instrucciones[index], infEtiquetas[index], infoVariables[index]);
+	}*/
+	await linea.runLineaLinea(memoria, instrucciones, infEtiquetas, infoVariables, bandera);	
+
 
 });
 

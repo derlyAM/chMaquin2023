@@ -1,25 +1,21 @@
-// Calcula el producto de dos valores entrados por teclado.
+// Programa para calcular el factorial de 5
 nueva unidad I 1
 nueva m I 5
-nueva n I 4
-lea m
-lea n
-nueva respuesta I 0
-nueva resultado C Resultado=
+nueva respuesta I 1
 nueva intermedia I 0
-cargue n
-// inicia ciclo
+cargue m
+almacene respuesta
 reste unidad
+// Se inicia el ciclo de cálculo del factorial
 almacene intermedia
 cargue respuesta
-sume m
+multiplique intermedia
 almacene respuesta
 cargue intermedia
-vayasi ciclo fin
-etiqueta ciclo 11
-etiqueta fin 25
-muestre resultado
+reste unidad
+vayasi itere fin
+etiqueta itere 9
+etiqueta fin 21
 muestre respuesta
-imprima resultado
 imprima respuesta
 retorne 0

@@ -131,17 +131,26 @@ export class Interprete {
                 if (inst[0] === "vayasi"){
                     //devolver el contador del for al valor que tiene la etiqueta
                     console.log("Esta es la informacion de las etiquetas",infEtiq)
+                    console.log("EL ACUMULADOR VA EN EL SIGUIENTE VALOR---->",memory[0])
                     let jsonEtiquetaUno = infEtiq.filter(elemento => elemento.nombre === inst[1]);
                     let jsonEtiquetaDos = infEtiq.filter(elemento => elemento.nombre === inst[2]);
                     if (jsonEtiquetaUno.length === 0 || jsonEtiquetaDos.length === 0){
                         throw new Error(`la etiqueta al que se desea acceder no existe`);
                     }else{
-                        if(memory[0]>0){
-                            i=parseInt(jsonEtiquetaUno[0].posicionInstrucciones)-1;
+                        if (memory[0]==0){
+                            console.log("ENTRO A DONDE EL ACUMULADOR ES CER------->")
+                            console.log("VA A LA POSICION DEL ",i=i+1)
+                            i=i+1;
+                        }
+                        else if(memory[0]>0){
+                            i=parseInt(jsonEtiquetaUno[0].posicionInstrucciones)-2;
+                            console.log("LA POSICION DE LA ETIQUETA QUE ENCUENTRA ES--->")
+                            console.log(jsonEtiquetaUno[0].posicionInstrucciones)
                         }
                         else if(memory[0]<0){
-                            i=parseInt(jsonEtiquetaUno[0].posicionInstrucciones)-1;
+                            i=parseInt(jsonEtiquetaUno[0].posicionInstrucciones)-2;
                         }
+                        
                         
                     }
 
@@ -454,7 +463,10 @@ export class Interprete {
             case "muestre":
                 nombreVariable = inst[1]
                 jsonVariable = infVariable.filter(elemento => elemento.nombre === nombreVariable);
-                if (jsonVariable.length === 0){
+                if(nombreVariable === "acumulador"){
+                    console.log("la variable tiene el valor impreso", memory[0]);
+                }
+                else if (jsonVariable.length === 0){
                     throw new Error(`la variable que se desea cargar no existe`);
                 }else{
                     console.log( "la variable tiene el valor en pantalla",jsonVariable[0].valor)
@@ -463,7 +475,10 @@ export class Interprete {
             case "imprima":
                 nombreVariable = inst[1]
                 jsonVariable = infVariable.filter(elemento => elemento.nombre === nombreVariable);
-                if (jsonVariable.length === 0){
+                if(nombreVariable === "acumulador"){
+                    console.log("la variable tiene el valor impreso", memory[0]);
+                }
+                else if (jsonVariable.length === 0){
                     throw new Error(`la variable no existe`);
                 }else{
                     console.log("la variable tiene el valor impreso",jsonVariable[0].valor)

@@ -9,11 +9,12 @@ export class LineaPrueba {
     }
 
     async runLineaLinea(memory, runInstrc, infEtiq, infVariable, bandera) {
-
+        console.log("ESTA ES LA INFO DE LAS VARIABLES",infVariable)
         console.log("---------------------------------------------------------------------", runInstrc);
-
+        let etiquetas = infEtiq[0];
+        let variables = infVariable[0];
         let valorButton = document.getElementById("nextButton")
-
+        let indices = this.index
         // Obtener el elemento div correspondiente al cuadro
         const box = document.getElementById("box");
         // Inicializar el índice del array a 0
@@ -30,15 +31,35 @@ export class LineaPrueba {
                     console.log('HAS DADO CLICK');
                     console.log(runInstrc);
                     this.index = this.index + 1;
-                    this.showElement(memory, runInstrc, infEtiq, infVariable, this.index)
+                    indices = indices + 1;
+                    console.log("CONTIENE LA PALABRA RETORNE----->",runInstrc[this.index].includes("retorne"))
+                    if(runInstrc[this.index].includes("retorne")){
+                        etiquetas = infEtiq[1];
+                        console.log("ESTAS SON LAS ETIQUETAS ENLA OTRA POCISON--->",etiquetas)
+                        variables = infVariable[1];
+                        console.log("ESTAS SON LAS VARIABLES ENLA OTRA POCISON--->",variables)
+                        console.log("ESTA ES LA MEMORIA QUE DEBERIA TENER ---->",memory)
+                        //runInstrc = runInstrc.splice(0, this.index);
+                        runInstrc = runInstrc.splice( this.index+1, runInstrc.length);
+                        console.log("ESTAS SON LAS INSTRUCCIONA AHORA ---->",runInstrc);
+                        this.index = 0;
+                        if(runInstrc.length===0){
+                            valorButton.disabled = true;
+                        }
+                        console.log("valor del incide en este momento ---->", this.index);
 
+                    }
+                    this.showElement(memory, runInstrc, etiquetas, variables, this.index)
+                    
+                    
+                    
                     // Comprobar si se ha alcanzado el final del array
                     if (this.index > runInstrc.length - 1) {
                         this.index = 0
-                        runInstrc=[]
-                        if(bandera){
-                            valorButton.disabled = true;
-                        }
+                        //runInstrc=[]
+                        
+                        valorButton.disabled = true;
+                        
                         resolve();
                         return;
                     }
@@ -93,6 +114,7 @@ export class LineaPrueba {
         else if (inst[0] === "retorne") {
             console.log("EL PROGRAMA TERMINO")
             memory[0] = 0;
+            
             if (i = runinstrc.length - 1) {
                 return
             }
@@ -126,17 +148,30 @@ export class LineaPrueba {
             if (inst[0] === "vayasi") {
                 //devolver el contador del for al valor que tiene la etiqueta
                 console.log("Esta es la informacion de las etiquetas", infEtiq)
+                console.log("EL ACUMULADOR VA EN EL SIGUIENTE VALOR---->",memory[0])
                 let jsonEtiquetaUno = infEtiq.filter(elemento => elemento.nombre === inst[1]);
                 let jsonEtiquetaDos = infEtiq.filter(elemento => elemento.nombre === inst[2]);
                 if (jsonEtiquetaUno.length === 0 || jsonEtiquetaDos.length === 0) {
                     throw new Error(`la etiqueta al que se desea acceder no existe`);
                 } else {
-                    if (memory[0] > 0) {
-                        i = parseInt(jsonEtiquetaUno[0].posicionInstrucciones) - 1;
+                    if (memory[0]==0){
+                        console.log("ENTRO A DONDE EL ACUMULADOR ES CER------->")
+                        console.log("VA A LA POSICION DEL ",i=i-1)
+                        i=i-1;
+                    }
+                    else if (memory[0] > 0) {
+                        console.log("LA POSICION DE LA ETIQUETA QUE ENCUENTRA ES--->")
+                        console.log(jsonEtiquetaUno[0].posicionInstrucciones)
+                        i = parseInt(jsonEtiquetaUno[0].posicionInstrucciones) - 2;
                         this.index = i;
+                        console.log("++++++++++---- valor del indice ------++++++")
+                        console.log(this.index)
+
                     }
                     else if (memory[0] < 0) {
-                        i = parseInt(jsonEtiquetaUno[0].posicionInstrucciones) - 1;
+                        console.log("LA POSICION DE LA ETIQUETA QUE ENCUENTRA ES--->")
+                        console.log(jsonEtiquetaUno[0].posicionInstrucciones)
+                        i = parseInt(jsonEtiquetaUno[0].posicionInstrucciones) - 2;
                         this.index = i;
                     }
 
@@ -314,6 +349,7 @@ export class LineaPrueba {
                     throw new Error(`la variable que se desea sumar no existe`);
                 } else {
                     memory[0] = memory[0] - jsonVariable[0].valor
+                    console.log("EN ESTO VA LS RESTA---->", memory[0])
                 }
                 break;
             case "multiplique":
@@ -450,7 +486,10 @@ export class LineaPrueba {
             case "muestre":
                 nombreVariable = inst[1]
                 jsonVariable = infVariable.filter(elemento => elemento.nombre === nombreVariable);
-                if (jsonVariable.length === 0) {
+                if(nombreVariable === "acumulador"){
+                    console.log("la variable tiene el valor impreso", memory[0]);
+                }
+                else if (jsonVariable.length === 0) {
                     throw new Error(`la variable que se desea cargar no existe`);
                 } else {
                     console.log("la variable tiene el valor en pantalla", jsonVariable[0].valor)
@@ -459,7 +498,11 @@ export class LineaPrueba {
             case "imprima":
                 nombreVariable = inst[1]
                 jsonVariable = infVariable.filter(elemento => elemento.nombre === nombreVariable);
-                if (jsonVariable.length === 0) {
+
+                if(nombreVariable === "acumulador"){
+                    console.log("la variable tiene el valor impreso", memory[0]);
+                }
+                else if (jsonVariable.length === 0) {
                     throw new Error(`la variable no existe`);
                 } else {
                     console.log("la variable tiene el valor impreso", jsonVariable[0].valor)
