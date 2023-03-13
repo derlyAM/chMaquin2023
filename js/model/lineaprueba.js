@@ -29,19 +29,18 @@ export class LineaPrueba {
                     e.preventDefault();
                     console.log('HAS DADO CLICK');
                     console.log(runInstrc);
-                    this.index = this.index + 1;
-                    this.showElement(memory, runInstrc, infEtiq, infVariable, this.index)
-
                     // Comprobar si se ha alcanzado el final del array
-                    if (this.index > runInstrc.length - 1) {
+                    if (this.index + 1 > runInstrc.length) {
+                        alert("Entroooooo")
                         this.index = 0
-                        runInstrc=[]
                         if(bandera){
                             valorButton.disabled = true;
                         }
                         resolve();
-                        return;
                     }
+                    this.index = this.index + 1;
+                    this.showElement(memory, runInstrc, infEtiq, infVariable, this.index)
+
 
                 });
             return;
@@ -454,6 +453,8 @@ export class LineaPrueba {
                     throw new Error(`la variable que se desea cargar no existe`);
                 } else {
                     console.log("la variable tiene el valor en pantalla", jsonVariable[0].valor)
+                    document.getElementById('screen-container').innerHTML = `<p class="text-box-fixed">${jsonVariable[0].valor}</p>`
+                    console.log(document.getElementById('screen-container'));
                 }
                 break;
             case "imprima":

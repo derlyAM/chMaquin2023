@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Mi sitio web</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="column column1">
+            <div class="row row1">
+                <div class="number-container">
+                    <label for="number-input">Memoria:</label>
+                    <input type="number" id="memory-input" name="number-input" min="0" max="100" value="50">
+                </div>
+                <div class="number-container">
+                    <label for="number-input">Kernel:</label>
+                    <input type="number" id="kernel-input" name="number-input" min="0" max="100" value="50">
+                </div>
+            </div>
+            <div class="row row2">
+                <div class="text-box-fixed">
+                    <p class="fixed-text-box" id="instructions-container"></p>
+                </div>
+            </div>
+        </div>
+        <div class="column column2">
+            <div class="row row1">
+                <div class="text-box-fixed">
+                    <p id="box"></p>
+                </div>
+                <div class="text-box-fixed">
+                    <p id="fixed-text-box">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Laborum quibusdam,
+                        quam
+                        quisquam veniam animi quasi ut suscipit nisi iusto minima dolore eaque? Mollitia nemo harum ab
+                        maxime recusandae totam laboriosam.</p>
+                </div>
+            </div>
+            <div class="row row2"></div>
+            <div class="row row3"></div>
+        </div>
+        <div class="column column3">
+            <div class="row row1">
+                <form id="file-form">
+                    <input type="file" id="file-input" name="file-input" multiple>
+                    <button type="submit" id="submit-btn">Cargar archivo</button>
+                </form>
+            
+                <div class="container">
+                    <button id="nextButton">Siguiente >>></button>
+                </div>
+            </div>
+            <div class="row row2">
+                <img src="image.png" alt="Imagen 1">
+            </div>
+            <div class="row row3">
+                <img src="imagen2.jpg" alt="Imagen 2">
+            </div>
+        </div>
+
+        <div class="column column4"></div>
+    </div>
+</body>
+
+</html>

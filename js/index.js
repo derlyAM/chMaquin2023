@@ -7,16 +7,18 @@ import { LineaPrueba } from "./model/lineaprueba.js";
 
 const form = document.querySelector('#file-form');
 const fileInput = document.querySelector('#file-input');
-
+let memoryContainer = document.getElementById('memory-container');
 form.addEventListener('submit', async (e) => {
 	e.preventDefault();
+	console.log(e.submitter.id);
 	let programa;
 	let correrPrograma;
 	let memoria = [];
 	let instrucciones = [];
 	let infEtiquetas = [];
 	let infoVariables = [];
-	let linea = new LineaPrueba(); 
+	let linea = new LineaPrueba();
+	memoryContainer.innerHTML = ''
 
 	for (let index = 0; index < fileInput.files.length; index++) {
 		const file = fileInput.files[index];
@@ -42,25 +44,35 @@ form.addEventListener('submit', async (e) => {
 			const tamanioMemoria = 1000
 			programa = new Interprete([], fileContent, lines, kernel, tamanioMemoria);
 			// se procede a ejecutar el programa.
-			
+
 			correrPrograma = programa.cargarPrograma(memoria, index);
 			memoria = [...memoria, ...correrPrograma[0]]
+			fileContent.forEach(instruccion => {
+				document.getElementById('instructions-container').innerHTML += `<p class="">${instruccion}</p>`
+			})
 			instrucciones.push(correrPrograma[1])
 			infEtiquetas.push(correrPrograma[2])
 			infoVariables.push(correrPrograma[3])
-
 		} catch (err) {
 			console.error(err);
 		}
 	}
-	let bandera=false
+	let bandera = false
+	let contador = 0
+	memoria.forEach(memoriaText => {
+		memoryContainer.innerHTML += `<p>${contador} . ${memoriaText}</p>`
+		contador++
+	})
+	contador = 0
 	for (let index = 0; index < instrucciones.length; index++) {
-
-    if(index===instrucciones.length-1){
-		bandera=true
-	}
-	//programa.runPrograma(memoria, instrucciones[index], infEtiquetas[index], infoVariables[index]);
-		await linea.runLineaLinea(memoria, instrucciones[index], infEtiquetas[index], infoVariables[index], bandera);	
+		if (index === instrucciones.length - 1) {
+			bandera = true
+		}
+		if (e.submitter.id == 'submit-btn') {
+			programa.runPrograma(memoria, instrucciones[index], infEtiquetas[index], infoVariables[index]);
+		} else {
+			await linea.runLineaLinea(memoria, instrucciones[index], infEtiquetas[index], infoVariables[index], bandera);
+		}
 	}
 
 });
