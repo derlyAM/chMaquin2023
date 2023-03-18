@@ -312,6 +312,7 @@ export class Interprete {
                 throw new Error(`la variable que se desea sumar no existe`);
             }else{
                 memory[0] = memory[0] + jsonVariable[0].valor
+                document.getElementById('acumulador-value').innerHTML = memory[0];
             }
 
             break;
@@ -322,6 +323,7 @@ export class Interprete {
                     throw new Error(`la variable que se desea sumar no existe`);
                 }else{
                     memory[0] = memory[0] - jsonVariable[0].valor
+                    document.getElementById('acumulador-value').innerHTML = memory[0];
                 }
             break;
             case "multiplique":
@@ -331,6 +333,7 @@ export class Interprete {
                     throw new Error(`la variable que se desea sumar no existe`);
                 }else{
                     memory[0] = memory[0] * jsonVariable[0].valor
+                    document.getElementById('acumulador-value').innerHTML = memory[0];
                 }
             break;
             case "divida":
@@ -344,6 +347,7 @@ export class Interprete {
                     }
                     else {
                         memory[0] = memory[0] / jsonVariable[0].valor
+                        document.getElementById('acumulador-value').innerHTML = memory[0];
                     }
                     
                 }
@@ -355,13 +359,15 @@ export class Interprete {
                     throw new Error(`la variable que se desea hacer potencia no existe`);
                 }else{
                     memory[0] = memory[0] ** jsonVariable[0].valor
+                    document.getElementById('acumulador-value').innerHTML = memory[0];
                 }
             break; 
             case "modulo":   
                 let valor = parseInt(inst[1])
                 if (!isNaN(valor)) {
                     // cambiamos el valor del acumulador por la opercion ya echa
-                    memory[0] = memory[0]%inst[1];                    
+                    memory[0] = memory[0]%inst[1]; 
+                    document.getElementById('acumulador-value').innerHTML = memory[0];                   
                 }else{
                     throw new Error(`el parametro pasado a la funcion "modulo" no es valido`);
                 }              
@@ -391,6 +397,7 @@ export class Interprete {
                 throw new Error(`la variable que se desea cargar no existe`);
             }else{
                 memory[0] = jsonVariable[0].valor
+                document.getElementById('acumulador-value').innerHTML = memory[0];
             }
 
             break;
@@ -469,6 +476,7 @@ export class Interprete {
                 else if (jsonVariable.length === 0){
                     throw new Error(`la variable que se desea cargar no existe`);
                 }else{
+                    document.getElementById('screen-container').innerHTML = `<p>${jsonVariable[0].valor}</p>`
                     console.log( "la variable tiene el valor en pantalla",jsonVariable[0].valor)
                 }
             break;
@@ -481,6 +489,7 @@ export class Interprete {
                 else if (jsonVariable.length === 0){
                     throw new Error(`la variable no existe`);
                 }else{
+                    document.getElementById('printer-container').innerHTML = `<p>${jsonVariable[0].valor}</p>`
                     console.log("la variable tiene el valor impreso",jsonVariable[0].valor)
                 }
             break;            
@@ -616,7 +625,7 @@ export class Interprete {
         }
         // cambiamos el valor del acumulador en la memoria
         memory[0] = resultado;
-
+        document.getElementById('acumulador-value').innerHTML = memory[0]; 
         return memory
     }
 
