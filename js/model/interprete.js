@@ -1,4 +1,4 @@
-//import {Operaciones} from "./operaciones";
+import "./operaciones.js";
 
 export class Interprete {
     

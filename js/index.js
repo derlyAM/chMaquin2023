@@ -57,17 +57,22 @@ form.addEventListener('submit', async (e) => {
 	instrucciones = [].concat.apply([], instrucciones);
 	
 	let bandera=false
-	/*for (let index = 0; index < infoVariables.length; index++) {
+	/*for (let index = 0; index < instrucciones.length; index++) {
 
     if(index===instrucciones.length-1){
 		bandera=true
 	}
 	//programa.runPrograma(memoria, instrucciones[index], infEtiquetas[index], infoVariables[index]);
 	}*/
-	await linea.runLineaLinea(memoria, instrucciones, infEtiquetas, infoVariables, bandera);	
+	runProg(memoria, instrucciones, infEtiquetas, infoVariables, bandera)
 
 
 });
+
+async function runProg(parammemoria, instrucciones, infEtiquetas, infoVariables, banderas) {
+	await linea.runLineaLinea(memoria, instrucciones, infEtiquetas, infoVariables, bandera);	
+	
+}
 
 
 

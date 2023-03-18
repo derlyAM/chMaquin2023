@@ -1,9 +1,4 @@
-export class Operaciones{
-
-    constructor(){       
-
-    }
-
+export default class Operaciones{
     funOperNum(instruccion,memory,infVariable){
         
         let retunrCambios = []
