@@ -16,7 +16,6 @@ form.addEventListener('submit', async (e) => {
 	let instrucciones = [];
 	let infEtiquetas = [];
 	let infoVariables = [];
-	let linea = new LineaPrueba(); 
 
 	for (let index = 0; index < fileInput.files.length; index++) {
 		const file = fileInput.files[index];
@@ -42,7 +41,7 @@ form.addEventListener('submit', async (e) => {
 			const tamanioMemoria = 1000
 			programa = new Interprete([], fileContent, lines, kernel, tamanioMemoria);
 			// se procede a ejecutar el programa.
-			
+
 			correrPrograma = programa.cargarPrograma(memoria, index);
 			memoria = [...memoria, ...correrPrograma[0]]
 			instrucciones.push(correrPrograma[1])
@@ -53,26 +52,32 @@ form.addEventListener('submit', async (e) => {
 			console.error(err);
 		}
 	}
-	
-	instrucciones = [].concat.apply([], instrucciones);
-	
-	let bandera=false
+
+	// instrucciones = [].concat.apply([], instrucciones);
 	/*for (let index = 0; index < instrucciones.length; index++) {
 
-    if(index===instrucciones.length-1){
+	if(index===instrucciones.length-1){
 		bandera=true
 	}
 	//programa.runPrograma(memoria, instrucciones[index], infEtiquetas[index], infoVariables[index]);
 	}*/
-	runProg(memoria, instrucciones, infEtiquetas, infoVariables, bandera)
+	runProg(memoria, instrucciones, infEtiquetas, infoVariables)
 
 
 });
 
-async function runProg(parammemoria, instrucciones, infEtiquetas, infoVariables, banderas) {
-	await linea.runLineaLinea(memoria, instrucciones, infEtiquetas, infoVariables, bandera);	
-	
+async function runProg(parammemoria, instrucciones, infEtiquetas, infoVariables) {
+	let linea = new LineaPrueba();
+	for (let index = 0; index < instrucciones.length; index++) {
+		await linea.runLineaLinea(parammemoria, instrucciones[index], infEtiquetas[index], infoVariables[index]);
+		if (index === instrucciones.length - 1) {
+			document.getElementById("nextButton").disabled = true;	
+			document.getElementById("box").innerHTML = 'Felicidades, terminó la ejrcución corretamente, no mire el log'
+		}
+	}
 }
+
+
 
 
 
