@@ -340,9 +340,11 @@ export class Interprete {
                 nombreVariable = inst[1]
                 jsonVariable = infVariable.filter(elemento => elemento.nombre === nombreVariable);
                 if (jsonVariable.length === 0){
+                    alert('la variable que se desea dividir no existe');
                     throw new Error(`la variable que se desea dividir no existe`);
                 }else{
                     if(jsonVariable[0].valor == 0){
+                        alert('No es posible dividir por cero');
                         throw new Error(`No es posible hacer division por cero`);
                     }
                     else {

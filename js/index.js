@@ -19,6 +19,7 @@ form.addEventListener('submit', async (e) => {
 	memoryContainer.innerHTML = ''
 	for (let index = 0; index < fileInput.files.length; index++) {
 		const file = fileInput.files[index];
+		const linIns = 1;
 
 		console.log("este es el archivo leido---->", file)
 		try {
@@ -37,40 +38,35 @@ form.addEventListener('submit', async (e) => {
 			// con comentarios y las que no tiene comentarios.
 			const memory = new Array();
 			// crear el array del  kernel
-			const kernel = new Array(5).fill('JuanDiegoKernel');
+			const kernel = new Array(5).fill('Derly`s kernel');
 			const tamanioMemoria = 1000
 			programa = new Interprete([], fileContent, lines, kernel, tamanioMemoria);
 			// se procede a ejecutar el programa.
 
 			correrPrograma = programa.cargarPrograma(memoria, index);
 			memoria = [...memoria, ...correrPrograma[0]]
-			fileContent.forEach(instruccion => {
-				document.getElementById('instructions-container').innerHTML += `<p class="">${instruccion}</p>`
-			})
+			for (let i = 0; i < lines.length; i++) {
+				document.getElementById('instructions-container').innerHTML += `<p class="">${(i+1)+'. '+lines[i]}</p>`
+				
+			}
+			
 			correrPrograma[2].forEach(etiqueta => {
-				document.getElementById('etiquetas-container').innerHTML += `<p class="">${etiqueta.identificador + ' ' + etiqueta.nombre + ' ' + etiqueta.posicionInstrucciones}</p>`
+				document.getElementById('etiquetas-container').innerHTML += `<p class="">${' identificador: '+etiqueta.identificador + ',  nombre:' + etiqueta.nombre + ',  posInstruc:' + etiqueta.posicionInstrucciones}</p>`
 			})
 			correrPrograma[3].forEach(variable => {
-				document.getElementById('variables-container').innerHTML += `<p class="">${variable.nombre + ' ' + variable.posicion + ' ' + variable.identificador + ' ' + variable.tipo +
-					' ' + variable.valor}</p>`
+				document.getElementById('variables-container').innerHTML += `<p class="">${' nombre:'+variable.nombre + ',  posicion:' + variable.posicion + ',   identificador:' + variable.identificador + ',  tipo:' + variable.tipo +
+					',  valor:' + variable.valor}</p>`
 			})
 			instrucciones.push(correrPrograma[1])
 			infEtiquetas.push(correrPrograma[2])
 			infoVariables.push(correrPrograma[3])
 
 		} catch (err) {
+			alert(err);
 			console.error(err);
 		}
 	}
-
-	// instrucciones = [].concat.apply([], instrucciones);
-	/*for (let index = 0; index < instrucciones.length; index++) {
-
-	if(index===instrucciones.length-1){
-		bandera=true
-	}
-	//programa.runPrograma(memoria, instrucciones[index], infEtiquetas[index], infoVariables[index]);
-	}*/
+	// llama una funcion que se encarga de de correr el programa ya sea linea a line o de corrido.
 	runProg(memoria, instrucciones, infEtiquetas, infoVariables, e, programa)
 
 
@@ -86,13 +82,20 @@ async function runProg(memoria, instrucciones, infEtiquetas, infoVariables, e, p
 	contador = 0
 	for (let index = 0; index < instrucciones.length; index++) {
 		if (e.submitter.id == 'submit-btn') {
-			programa.runPrograma(memoria, instrucciones[index], infEtiquetas[index], infoVariables[index]);
+			// esperar 10 segundos antes de continuar
+			setTimeout(function() {
+				// código que se ejecutará después de 10 segundos
+				// ...
+				programa.runPrograma(memoria, instrucciones[index], infEtiquetas[index], infoVariables[index]);
+				alert("Termino la  ejecucion del programa numero "+(index+1))
+			}, 10000); // 10000 milisegundos = 10 segundos
+			
 		} else {
 			await linea.runLineaLinea(memoria, instrucciones[index], infEtiquetas[index], infoVariables[index]);
 		}
 		if (index === instrucciones.length - 1) {
 			document.getElementById("nextButton").disabled = true;
-			document.getElementById("box").innerHTML = 'Felicidades, terminó la ejrcución corretamente, no mire el log'
+			document.getElementById("box").innerHTML = 'Terminó la ejrcución corretamente'
 		}
 	}
 }

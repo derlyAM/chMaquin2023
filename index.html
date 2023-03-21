@@ -16,54 +16,91 @@
 			<div class="row row1">
 				<div class="number-container">
 					<label for="number-input">Memoria:</label>
-					<input type="number" id="memory-input" name="number-input" min="0" max="100" value="50">
+					<input type="number" id="memory-input" class="form" name="number-input" min="0" max="100" value="50">
 				</div>
 				<div class="number-container">
-					<label for="number-input">Kernel:</label>
-					<input type="number" id="kernel-input" name="number-input" min="0" max="100" value="50">
+					<label for="number-input"  >Kernel:</label>
+					<input type="number" class="form" id="kernel-input" name="number-input" min="0" max="100" value="50">
 				</div>
 			</div>
-			<div class="row row2">
-				<div class="text-box-fixed" id="instructions-container">
+			<div class="instruction">
+				<div class="text-box-fixd" id="instructions-container">
 				</div>
 			</div>
-		</div>
-		<div class="column column2">
-			<div class="row row1">
-				<div class="text-box-fixed-acumulador">
-					<p id="acumulador">Acumulador: </p>
-					<p id="acumulador-value"></p>
-				</div>
-				<div class="text-box-fixed">
-					<p id="box"></p>
-				</div>
-			</div>
-			<div class="row row2">
-				<div class="text-box-fixed" id="etiquetas-container"></div>
-			</div>
-			<div class="row row3">
-				<div class="text-box-fixed" id="variables-container"></div>
-			</div>
-		</div>
-		<div class="column column3">
-			<div class="row row1">
-				<form id="file-form">
-					<input type="file" id="file-input" name="file-input" multiple>
-					<button type="submit" class="submit-btn" id="submit-btn">Ejecutar</button>
-					<button type="submit" class="submit-btn" id="submit-btn-pp">Ejecutar Paso a Paso</button>
-				</form>
-				<div class="container">
-					<button id="nextButton">Siguiente >>></button>
-				</div>
-			</div>
-			<div class="row row2" id="screen-container"></div>
-			<div class="row row3" id="printer-container"></div>
-		</div>
+	</div>
+	
+	<div class="container_prueba">
+		<div class=" column_prueba">
 
-		<div class="column column4">
-			<div class="text-box-fixed" id="memory-container">
+			<div class="container_pc">
+				<div class="row_pc_uno">
+					<div class="container_encabezado">
+						<div class="col_encabezado">
+							<p class="acumulador_pant_uno" id="acumulador">Acumulador:  </p>
+							<p class="acumulador_pant_uno" id="acumulador-value"></p>
+						</div>
+						<div class="col_encabezado_uno">
+							<p  class="acumulador_pant_uno" id="box"></p>
+						</div>
+					</div>
+				</div>
+				<div class="row_pc">
+					<div class="container_pan_print">
+						<div class="column_pan_print">
+							<div class="screen" id="screen-container"></div>
+							<div class="button_nex">
+								<button id="nextButton">Siguiente >>></button>
+							</div>
+						</div>
+						<div class="column_pan_print"> Impresora
+							<div class="impresora" id="printer-container"></div>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+		<div class="column_prueba_uno">
+			<div class="container_carg_prog">
+				<div class="row_no_pc">
+					<form id="file-form" class="bloque_dos">
+						<div class="cargar_archivo">
+							<input type="file" id="file-input" name="file-input" multiple>
+							<button type="submit" class="submit-btn" id="submit-btn-cg">Cargar Programa(s)</button>
+						</div>
+						<div class="button_run_prog">
+							<button type="submit" class="submit-btn submit_btn_uno" id="submit-btn">Ejecutar</button>
+							<button type="submit" class="submit-btn" id="submit-btn-pp">Ejecutar Paso a Paso</button>
+						</div>
+						
+					</form>
+					
+				</div>
+				<div class="row_no_pc">
+					<div class="containe_inf_etq">
+
+						<div class="row_inf_etq">
+							<p id="acumulador">Info etiquetas: </p>
+							<div class="info_etiq_var" id="etiquetas-container"></div>
+						</div>
+						<div class="row_inf_etq">
+							<p id="acumulador">Info Variables: </p>
+							<div class="info_etiq_var" id="variables-container"></div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
+	</div>
+
+	<div class="column column4">
+		<div class="instruction_dos">
+			<div class="text-box-fixd" id="memory-container">
+			</div>
+		</div>
+		
+	</div>
 </body>
 
 <script type="module" src="js/index.js"></script>

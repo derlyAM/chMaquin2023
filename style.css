@@ -5,36 +5,53 @@ html {
   height: 100%;
 }
 
+.form{
+  border-radius: 40px;
+  padding: 3px;
+  margin: 3px 50px 2px 0px;
+}
+
 .container {
   display: flex;
   flex-basis: auto;
   height: 100%;
+  border-radius: 40px;
 }
 
 .column {
   border: 1px solid black;
   flex-basis: 25%;
   height: 100%;
+  border-radius: 40px;
 }
 
 .column1 {
-  background-color: #ffc300;
+  background-color: #655DBB;
   flex: 1 0 25%;
+  border-radius: 40px;
+  margin: 10px 10px 100px 10px;
+  
 }
 
 .column1 .row1 {
   flex-basis: 25%;
   padding: 10px;
+  margin: 10px 10px 10px 10px;
+  border-radius: 20px;
 }
 
 .row {
   flex: 1;
   border: 1px solid black;
+  border-radius: 10px;
+  margin: 10px 10px 10px 10px;
+
 }
 
 .row1 {
   background-color: #f0f0f0;
   flex-basis: 25%;
+  
 }
 
 // Contenido para obtener kernel y memoria. fila 1 columna 1
@@ -56,12 +73,48 @@ html {
 // Para el textbox de las variables en col 1 row 2
 .text-box-fixed {
   width: 100%;
+  height: 0%;
   padding: 20px;
   display: flex;
+  overflow-y: scroll; /* agregar barra de desplazamiento vertical */
+  padding-left: 10px;
+}
+
+.instruction{
+  border-color: #C9EEFF;
+  border-style: dashed;
+  margin: 10px 60px 60px 15px;
+  width: 90%;
+  height: 80%;
+  border-radius: 10px;
+  overflow-y: scroll; /* agregar barra de desplazamiento vertical */
+  padding-left: 10px;
+}
+
+.instruction_dos{
+  border-color: #C9EEFF;
+  border-style: dashed;
+  margin: 27px 10px 10px 10px;
+  width: 90%;
+  height: 90%;
+  border-radius: 10px;
+  overflow-y: scroll; /* agregar barra de desplazamiento vertical */
+  padding-left: 10px;
+}
+
+.instruction_uno{
+  border-color: #C9EEFF;
+  border-style: dashed;
+  margin: 30px 10px 10px 10px;
+  width: 90%;
+  height: 90%;
+  border-radius: 10px;
+  
 }
 
 .text-box-fixed p {
   font-size: 20px;
+  height: 50px;
   font-weight: bold;
   text-align: center;
 }
@@ -69,6 +122,7 @@ html {
 .text-box-fixed-acumulador {
   width: 100%;
   display: flex;
+  
 }
 
 .text-box-fixed-acumulador p {
@@ -95,9 +149,10 @@ html {
 }
 
 .column2 {
-  background-color: #ff5733;
+  background-color: #3A1078;
   display: flex;
   flex-direction: column;
+  margin: 10px 10px 10px 10px;
 }
 
 .column2 .row {
@@ -138,9 +193,10 @@ html {
 }
 
 .column3 {
-  background-color: #ffc0cb;
+  background-color: #3795BD;
   display: flex;
   flex-direction: column;
+  margin: 10px 10px 10px 10px;
 }
 
 .column3 .row {
@@ -191,10 +247,12 @@ input[type="file"] {
 #nextButton {
   background-color: #4caf50;
   color: white;
-  padding: 12px 20px;
+  padding: 10px 15px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  display: block;
+  margin: 0 auto;
 }
 
 #nextButton:hover {
@@ -204,6 +262,7 @@ input[type="file"] {
 .column3 .row3 {
   flex: 1;
   flex-basis: 45%;
+  border-radius: 50px;
 }
 .column3 .row2 img,
 .column3 .row3 img {
@@ -211,10 +270,13 @@ input[type="file"] {
   max-width: 100%;
   max-height: 100%;
   margin: auto;
+  border-radius: 40px;
 }
 .column4 {
-  background-color: #900c3f;
+  background-color: #3E54AC;
   overflow-y: auto;
+  border-radius: 40px;
+  margin: 10px 10px 10px 10px;
 }
 .column3 .row2 {
   background-image: url("https://th.bing.com/th/id/OIP.94lAzH37n4ayYY_nZVcdogHaE7?w=257&h=180&c=7&r=0&o=5&pid=1.7");
@@ -222,6 +284,7 @@ input[type="file"] {
   background-position: center;
   background-repeat: no-repeat;
   text-align: center;
+  border-radius: 40px;
 }
 
 .column3 .row2 p {
@@ -231,6 +294,7 @@ input[type="file"] {
   text-align: center;
   justify-content: center;
   width: 100%;
+  border-radius: 40px;
 }
 
 .column3 .row3 {
@@ -241,6 +305,7 @@ input[type="file"] {
   text-align: center;
   display:flex;
   flex-direction: column;
+  border-radius: 40px;
 }
 
 .column3 .row3 p {
@@ -250,4 +315,211 @@ input[type="file"] {
   text-align: start;
   justify-content: center;
   width: 100%;
+  border-radius: 40px;
 }
+
+.container_prueba {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #37cb90;
+  border-radius: 40px;
+  margin: 10px;
+  width: 70%;
+  overflow-y: scroll; /* agregar barra de desplazamiento vertical */
+  
+}
+.column_prueba {
+  display: flex;
+  background-color: #cb7a37;
+  height: 60%;
+
+  border-radius: 20px;
+  margin: 20px 10px 10px 10px;
+}
+
+.column_prueba_uno {
+  display: flex;
+  height: 30%;
+  border-radius: 20px;
+  margin: 20px 10px 10px 10px;
+}
+
+.container_pc {
+  display: flex;
+  flex-direction: column;
+  background-color: #2F58CD;
+  width: 100%;
+  margin: 20px 10px 10px 10px;
+  border-radius: 20px;
+
+}
+
+.row_pc {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  margin: 10px;
+  border-radius: 20px;
+  
+}
+.row_pc_uno {
+  display: flex;
+  height: 20%;
+  width: 100%;
+  margin: 10px;
+  border-radius: 20px;
+  
+}
+
+.container_pan_print {
+  display: flex;
+  background-color: #249dde;
+  height: 100%;
+  width: 100%;
+  border-radius: 20px;
+}
+
+.column_pan_print {
+  float: left;
+  width: 50%;
+  background-color: #166894;
+  border: 1px solid black;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 20px;
+}
+
+.impresora{
+  height: 50%;
+  width: 100%;
+  background-color: #169440;
+  border: 1px solid black;
+  border-radius: 20px;
+  margin-top: 80px;
+}
+
+.screen{
+  height: 80%;
+  width: 100%;
+  background-color: #169440;
+  border: 1px solid black;
+  border-radius: 20px;
+  margin-top: 5px;
+}
+
+.button_nex{
+  margin-top: 7px;
+
+}
+
+.acumulador_pant{
+  background-color: #162b94;
+  width: 96%;
+  border-radius: 20px;
+  border: 1px solid black;
+}
+
+.acumulador_pant_uno{
+  padding: 0px 10px 10px 30px;
+  margin: 5px;
+}
+
+.button_run_prog{
+  
+  display: block;
+  float: left;
+  margin: 5px; /* Espacio entre los botones */
+  background-color: #cb7a37;
+  width: 80%;
+  border-radius: 20px;
+  padding-right: 120px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.bloque_dos{
+  
+  width: 100%;
+  
+}
+.cargar_archivo{
+  margin: 5px; /* Espacio entre los botones */
+  width: 65%;
+  background-color: #cb7a37;
+  border-radius: 20px;
+  padding: 10px;
+  margin-left: 90px;
+
+}
+
+.submit_btn_uno{
+  margin-left: 250px;
+  
+
+}
+
+.container_carg_prog {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.row_no_pc {
+  display: flex;
+}
+
+.containe_inf_etq {
+  display: flex;
+  background-color: #249dde;
+  flex-direction: column;
+  border: 1px solid black;
+  width: 100%;
+  border-radius: 20px;
+}
+
+.info_etiq_var{
+  border: 1px solid black;
+  overflow-y: scroll; /* agregar barra de desplazamiento vertical */
+  width: 100%;
+  border-radius: 20px;
+}
+
+.row_inf_etq {
+  display: flex;
+  border: 1px solid black;
+  margin: 10px;
+  border-radius: 20px;
+}
+
+.container_encabezado{
+  display: flex;
+  width: 96%;
+  border-radius: 20px;
+  height: 100%;
+  
+
+}
+
+.col_encabezado {
+  float: left;
+  width: 30%;
+  margin: 10px ;
+  height: 100%;
+  background-color:#249dde;
+  border-radius: 20px;
+
+}
+
+.col_encabezado_uno {
+  float: left;
+  width: 90%;
+  border: 1px solid black;
+  margin: 10px ;
+  height: 100%;
+  background-color:#249dde;
+  border-radius: 20px;
+}
+
+
+
+

@@ -331,9 +331,11 @@ export class LineaPrueba {
                 nombreVariable = inst[1]
                 jsonVariable = infVariable.filter(elemento => elemento.nombre === nombreVariable);
                 if (jsonVariable.length === 0) {
+                    alert('la variable que se desea dividir no existe')
                     throw new Error(`la variable que se desea dividir no existe`);
                 } else {
                     if (jsonVariable[0].valor == 0) {
+                        alert(`No es posible hacer division por cero`)
                         throw new Error(`No es posible hacer division por cero`);
                     }
                     else {
@@ -352,7 +354,13 @@ export class LineaPrueba {
                 }
                 break;
             case "modulo":
-                console.log("OJO FALTA  DEFINIR MODULO")
+                let valor = parseInt(inst[1])
+                if (!isNaN(valor)) {
+                    // cambiamos el valor del acumulador por la opercion ya echa
+                    memory[0] = memory[0]%inst[1];                    
+                }else{
+                    throw new Error(`el parametro pasado a la funcion "modulo" no es valido`);
+                }
                 break;
             default:
                 console.log("No es una instruccion valida");
@@ -458,6 +466,7 @@ export class LineaPrueba {
                 else if (jsonVariable.length === 0) {
                     throw new Error(`la variable que se desea cargar no existe`);
                 } else {
+                    document.getElementById('screen-container').innerHTML = `<p>${jsonVariable[0].valor}</p>`
                     console.log("la variable tiene el valor en pantalla", jsonVariable[0].valor)
                 }
                 break;
@@ -471,6 +480,7 @@ export class LineaPrueba {
                 else if (jsonVariable.length === 0) {
                     throw new Error(`la variable no existe`);
                 } else {
+                    document.getElementById('printer-container').innerHTML = `<p>${jsonVariable[0].valor}</p>`
                     console.log("la variable tiene el valor impreso", jsonVariable[0].valor)
                 }
                 break;
