@@ -96,7 +96,7 @@ export class Interprete {
         // correr las instrucciones.
         for (let i = inicio; i < runinstrc.length ; i++) {
 
-            alert("LINEA EN LA QUE VA "+runinstrc[i])
+            //alert("LINEA EN LA QUE VA "+runinstrc[i])
             
 
             console.log("esto es lo que tiene la linea--------->",runinstrc[i])
@@ -194,7 +194,7 @@ export class Interprete {
             console.log("ES LA MANERA QUE QUEDA LA MEMORIA ---->", memory)
 
             if(conteoLineas>=rafaga){
-                alert("entro conteo lineas ---> "+ i+ " ESTE CONTEO LINEAS "+ conteoLineas)
+                //alert("entro conteo lineas ---> "+ i+ " ESTE CONTEO LINEAS "+ conteoLineas)
                 return [memory,i+1];
                 
             }

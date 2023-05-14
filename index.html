@@ -70,6 +70,22 @@
 							<button type="submit" class="submit-btn" id="submit-btn-cg">Cargar Programa(s)</button>
 						</div>
 						<div class="button_run_prog">
+							<div>
+								<label for="priority-method">Seleccione el algoritmo: </label>
+								<select name="priority-method" id="priority-method" >
+								<option value="FCFS">FCFS</option>
+								<option value="RR">Round-Robin</option>
+								<option value="SJF">SJF</option>
+								<option value="SJFE">SJFE</option>
+								<option value="Priority">Prioridad</option>
+								</select>
+								
+								<div id="radio-buttons">
+								<!-- los radio botones se agregarán aquí dinámicamente -->
+								</div>
+							</div>
+							
+
 							<button type="submit" class="submit-btn submit_btn_uno" id="submit-btn">Ejecutar</button>
 							<button type="submit" class="submit-btn" id="submit-btn-pp">Ejecutar Paso a Paso</button>
 						</div>
@@ -104,5 +120,7 @@
 </body>
 
 <script type="module" src="js/index.js"></script>
+
+
 
 </html>

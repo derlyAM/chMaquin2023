@@ -83,12 +83,16 @@ form.addEventListener('submit', async (e) => {
 		}
 	}
 	memoria = correrPrograma[0]
+
+	let metodo = document.getElementById("priority-method").value;
+
+	console.log("este es el metodo elegido",metodo)
 	// llama una funcion que se encarga de de correr el programa ya sea linea a line o de corrido.
-	runProg(memoria, instrucciones, infEtiquetas, infoVariables, e, programa)
+	runProg(memoria, instrucciones, infEtiquetas, infoVariables, e, programa, metodo)
 });
 
 
-async function runProg(memoria, instrucciones, infEtiquetas, infoVariables, e, programa) {
+async function runProg(memoria, instrucciones, infEtiquetas, infoVariables, e, programa, metodo) {
 	let contador = 0
 	memoria.forEach(memoriaText => {
 		memoryContainer.innerHTML += `<p>${contador} . ${memoriaText}</p>`
@@ -100,18 +104,40 @@ async function runProg(memoria, instrucciones, infEtiquetas, infoVariables, e, p
 		proceso = new Procesos(memoria,infEtiquetas,infoVariables,1)
 	} else {
 		proceso = new Procesos(memoria,infEtiquetas,infoVariables,0)
-	}
-	proceso.ElegirMetodo(instrucciones,3, 4, programa)
+	}	
 
+	switch (metodo) {
+		case "FCFS":
+
+			proceso.ElegirMetodo(instrucciones,0, programa)
+			break;
+		case "RR":
+			
+			proceso.ElegirMetodo(instrucciones,1, programa)
+			break;
+		case "SJF":
+
+			proceso.ElegirMetodo(instrucciones,2, programa)
+			break;
+		case "SJFE":
+
+			proceso.ElegirMetodo(instrucciones,3, programa)
+			break;
+		case "Priority":
+
+			proceso.ElegirMetodo(instrucciones,4, programa)
+			break;
+	
+		default:
+			break;
+	}
 }
 
+
+
+
 /*async function runProg(memoria, instrucciones, infEtiquetas, infoVariables, e, programa) {
-	let linea = new LineaPrueba();
-	let contador = 0
-	memoria.forEach(memoriaText => {
-		memoryContainer.innerHTML += `<p>${contador} . ${memoriaText}</p>`
-		contador++
-	})
+	
 	contador = 0
 	for (let index = 0; index < instrucciones.length; index++) {
 		if (e.submitter.id == 'submit-btn') {

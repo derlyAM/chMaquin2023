@@ -8,17 +8,20 @@ export class Procesos {
         this.tipoEjecucion = tipoEjecucion;
     }
 
-    ElegirMetodo(instrucciones, opcion, quantum, programa) {
+    ElegirMetodo(instrucciones, opcion, programa) {
         switch (opcion) {
             case 0:
+                alert("EJECUCION Orden Llegadad");
                 this.ordenDeLlegada(instrucciones, programa)
                 break;
             case 1:
-                alert("estas son las instrucciones:--->"+instrucciones)
-                console.log("ESTOS SON LOS PROGRAMAS A CORRER",instrucciones);
-                this.RoundRobin(instrucciones, quantum, programa)
+                alert("EJECUCION RR");
+                let quantum = prompt("Ingrese un valor:");
+                console.log(+quantum);
+                this.RoundRobin(instrucciones, +quantum, programa)
                 break;
             case 2:
+                alert("EJECUCION SJF");
                 this.ShortestJobFirstNe(instrucciones, programa)
                 break;
             case 3:
@@ -26,6 +29,14 @@ export class Procesos {
                 this.SJFE(instrucciones, programa)
                 break;
             case 4:
+                let prioridad = []
+                let valor                
+                for (let i = 0; i < instrucciones.length; i++) {
+                    valor = prompt("Ingrese un valor de la prioridad del programa: ",i);
+                    prioridad.push(+valor)                    
+                }
+                alert("EJECUCION PN");
+                console.log("estas son las prioridades ", prioridad);
                 this.PrioridadNe(instrucciones, prioridad, programa)
                 break;
             default:
@@ -64,8 +75,17 @@ export class Procesos {
     }
 
     async ordenDeLlegada(instrucciones, programa) {
-        for (let j = 0; j < instrucciones.length; j++) {
-            programa.runPrograma(this.memoria, instrucciones[j], this.infoEtiquetas[j], this.infoVariables[j], 0, instrucciones[j].length + 3000);
+
+        if (this.tipoEjecucion == 0) {
+            let ejecutar = new LineaPrueba();
+            alert("ENTRO A LA EJECUCUION DEL LINEA AL LINEA")
+            for (let i = 0; i < instrucciones.length; i++) {
+                await ejecutar.runLineaLinea(this.memoria, instrucciones[i], this.infoEtiquetas[i], this.infoVariables[i], 0,instrucciones[i].length + 3000);
+            };
+        } else {
+            for (let j = 0; j < instrucciones.length; j++) {
+                programa.runPrograma(this.memoria, instrucciones[j], this.infoEtiquetas[j], this.infoVariables[j], 0, instrucciones[j].length + 3000);
+            }
         }
     }
 
@@ -100,12 +120,12 @@ export class Procesos {
         if (this.tipoEjecucion == 0) {
             let ejecutar = new LineaPrueba();
             for (let i = 0; i < instruccionesSjf.length; i++) {
-                await programa.runPrograma(this.memoria, json[0].Instruccion, json[0].InfoEtiquetas, json[0].InfoVariables, 0, json[0].Instruccion.length - 1);
+                await ejecutar.runLineaLinea(this.memoria, json[i].Instruccion, json[i].InfoEtiquetas, json[i].InfoVariables, 0, json[i].Instruccion.length+3000);
 
             };
         } else {
             for (let j = 0; j < instruccionesSjf.length; j++) {
-                await programa.runPrograma(this.memoria, json[0].Instruccion, json[0].InfoEtiquetas, json[0].InfoVariables, 0, json[0].Instruccion.length - 1);
+                programa.runPrograma(this.memoria, json[j].Instruccion, json[j].InfoEtiquetas, json[j].InfoVariables, 0, json[j].Instruccion.length+3000);
 
             }
         }
@@ -116,6 +136,7 @@ export class Procesos {
         let instruccionesSjf = []
         let variables = []
         let etiquetas = []
+        let ejecutar = new LineaPrueba();
         for (let i = 0; i < instrucciones.length; i++) {
             console.log("Rafaga: " + this.AsignarRafaga(instrucciones[i]));
             console.log(instrucciones[i]);
@@ -134,21 +155,21 @@ export class Procesos {
             etiquetas.push(element.InfoEtiquetas)
         });
         if (this.tipoEjecucion == 0) {
-            let ejecutar = new LineaPrueba();
+            alert("ENTRO A LINE A LINEA")
+            alert("ESTO ES LO QUE TIENE LAS INSTRUCCIONS "+instruccionesSjf)
             for (let i = 0; i < instruccionesSjf.length; i++) {
-                await programa.runPrograma(this.memoria, json[0].Instruccion, json[0].InfoEtiquetas, json[0].InfoVariables, 0, json[0].Instruccion.length - 1);
+                alert("entro al for")
+                await ejecutar.runLineaLinea(this.memoria, instruccionesSjf[i], etiquetas[i], variables[i], 0, instruccionesSjf.length + 3000);
 
             };
         } else {
             for (let j = 0; j < instruccionesSjf.length; j++) {
                 console.log(instruccionesSjf[j]);
-                programa.runPrograma(this.memoria, json[0].Instruccion, json[0].InfoEtiquetas, json[0].InfoVariables, 0, json[0].Instruccion.length - 1);
+                programa.runPrograma(this.memoria, json[j].Instruccion, json[j].InfoEtiquetas, json[j].InfoVariables, 0, json[j].Instruccion.length + 3000);
 
             }
         }
     }
-
-
 
     SJFE(instrucciones, programa) {
         // arreglo donde se guardaran los datos
@@ -171,102 +192,131 @@ export class Procesos {
 
     }
 
-    newMethod(json,programa) {
+    async newMethod(json,programa) {
 
-        let noTerminados = []
-        console.log("JSONNN", json);
+        let noTerminados = [];
+        let ejecutar = new LineaPrueba();
+        let retorno;
+
+        // caso en que se cargara unicamente un programa.
         if (json.length == 1) {
             programa.runPrograma(this.memoria, json[0].Instruccion, json[0].InfoEtiquetas, json[0].InfoVariables, 0, json[0].Instruccion.length+300);
-
             return;
         }
+        // cuando son mas de un programa.
+        if (this.tipoEjecucion == 0) {
+            
+            for (let i = 0; i < json.length; i++) {
 
-        // let fin = 0;
-        let retorno;
-        for (let i = 0; i < json.length; i++) {
+                let inicio = json[i].linea;        
+    
+                // calculamos la cantidad de lineas que deben ejecutarse
+                let cantInstr = json[i + 1].Tiemporllegada - json[i].Tiemporllegada;    
+                // actualizamos la cantidad de rafajas
+                json[i]["Rafaga"] = json[i]["Rafaga"] - cantInstr;    
 
-
-
-            let inicio = json[i].linea;            
-
-            // calculamos la cantidad de lineas que deben ejecutarse
-            let cantInstr = json[i + 1].Tiemporllegada - json[i].Tiemporllegada;
-
-            alert(" cantidad instrucciones --->"+ cantInstr);
-
-            // actualizamos la cantidad de rafajas
-            json[i]["Rafaga"] = json[i]["Rafaga"] - cantInstr;
-
-            // se pasa la informacion para que se ejcuten las instrucciones
-            retorno = programa.runPrograma(this.memoria, json[i].Instruccion, json[i].InfoEtiquetas, json[i].InfoVariables, inicio, cantInstr);
-
-            this.memoria = retorno[0]
-            json[i].Acumulador = this.memoria[0];
-            if(retorno[1]==="retorne"){ 
-                json.shift();
-                i--;
-            } else {
-
-                json[i].linea = retorno[1]
-
-                console.log("SFSC1 :", json[i].Instruccion, cantInstr);
-
-                // compara la rafagas con el siguiente programa para saber si se sigue con el programa o no
-                if (json[i]["Rafaga"] > json[i + 1]["Rafaga"]) {
-                    noTerminados.push(json[i]);
+                // ponemos el index donde debe iniciar el programa
+                ejecutar.setIndex(inicio);
+                // se pasa la informacion para que se ejcuten las instrucciones
+                await ejecutar.runLineaLinea(this.memoria, json[i].Instruccion, json[i].InfoEtiquetas, json[i].InfoVariables, inicio, cantInstr);
+                // actualizamos la memoria.
+                this.memoria = ejecutar.getMemory();
+                json[i].Acumulador = this.memoria[0];
+                if(retorno[1]==="retorne"){ 
                     json.shift();
-                    if(json.length==1){
-
-                        retorno = programa.runPrograma(this.memoria, json[i].Instruccion, json[i].InfoEtiquetas, json[i].InfoVariables, json[i].linea, json[i].length+3000);
-                    
-
-                    }else{
-                        
-                        i--;
-                    }
+                    i--;
                 } else {
-                    noTerminados.push(json[i + 1]);
-                    alert("este se agrega a no terminados ----> "+ json[i + 1]);
-                    console.log("este se agrega a no terminados ----> "+ json[i + 1])
-                    json.splice(i + 1, 1);
-                    alert("ELEMENTOS EN NO TERMINADOS->>>>>"+ json)
-                    console.log("ELEMENTOS EN NO TERMINADOS->>>>>",json)
-
-                    if(json.length==1){
-
-                        retorno = programa.runPrograma(this.memoria, json[i].Instruccion, json[i].InfoEtiquetas, json[i].InfoVariables, json[i].linea, json[i].length+3000);
-
-                    }else{                        
-                        i--;
-                    }
-
-                }
-
+    
+                    json[i].linea = retorno[1]    
+                    // compara la rafagas con el siguiente programa para saber si se sigue con el programa o no
+                    if (json[i]["Rafaga"] > json[i + 1]["Rafaga"]) {
+                        noTerminados.push(json[i]);
+                        json.shift();
+                        if(json.length==1){    
+                            await ejecutar.runLineaLinea(this.memoria, json[i].Instruccion, json[i].InfoEtiquetas, json[i].InfoVariables, json[i].linea, json[i].length+3000);
+                        }else{                            
+                            i--;
+                        }
+                    } else {
+                        noTerminados.push(json[i + 1]);
+                        json.splice(i + 1, 1);
+                        if(json.length==1){    
+                            await ejecutar.runLineaLinea(this.memoria, json[i].Instruccion, json[i].InfoEtiquetas, json[i].InfoVariables, json[i].linea, json[i].length+3000);
+    
+                        }else{                        
+                            i--;
+                        }    
+                    }    
+                }                
+            }    
+            /*
+            una vez que se ejecutaran los programas se organizan por cant de rafaga y se proceden
+            a ejecutar las cantidad de lineas no ejecutadas de cada programa
+            */
+            noTerminados.sort(function (a, b) {
+                return a.Rafaga - b.Rafaga;
+            });
+            for (let i = 0; i < noTerminados.length; i++) {
+                // actualizamos el valor del acumulador.
+                this.memoria[0]=noTerminados[i].Acumulador;
+                // ejecutamos acad uno de los programas.
+                await ejecutar.runLineaLinea(this.memoria, noTerminados[i].Instruccion, noTerminados[i].InfoEtiquetas, noTerminados[i].InfoVariables, noTerminados[i].linea, noTerminados[i].Instruccion.length+300);     
             }
+        } else {
+            for (let i = 0; i < json.length; i++) {
 
-            alert("ESTO SON LOS NO TERMINADOS ---> "+noTerminados[0]);
-            
-        }
-
-        /*
-        una vez que se ejecutaran los programas se organizan por cant de rafaga y se proceden
-        a ejecutar las cantidad de lineas no ejecutadas de cada programa
-        */
-        console.log(noTerminados);
-
-        alert("estos son los progrmas no terminados "+ noTerminados)
-        noTerminados.sort(function (a, b) {
-            return a.Rafaga - b.Rafaga;
-        });
-        for (let i = 0; i < noTerminados.length; i++) {
-
-            alert("ENTRO A RECORRER LOS PROGRAMAS NO TERMINADOS"+ "linea en la que quedo"+ noTerminados[i].linea)
-            this.memoria[0]=noTerminados[i].Acumulador;
-            
-            programa.runPrograma(this.memoria, noTerminados[i].Instruccion, noTerminados[i].InfoEtiquetas, noTerminados[i].InfoVariables, noTerminados[i].linea, noTerminados[i].Instruccion.length+300); 
-            console.log(noTerminados[i].Instruccion);
-
-        }
+                let inicio = json[i].linea;        
+    
+                // calculamos la cantidad de lineas que deben ejecutarse
+                let cantInstr = json[i + 1].Tiemporllegada - json[i].Tiemporllegada;    
+                // actualizamos la cantidad de rafajas
+                json[i]["Rafaga"] = json[i]["Rafaga"] - cantInstr;    
+                // se pasa la informacion para que se ejcuten las instrucciones
+                retorno = programa.runPrograma(this.memoria, json[i].Instruccion, json[i].InfoEtiquetas, json[i].InfoVariables, inicio, cantInstr);
+                // actualizamos la memoria.
+                this.memoria = retorno[0]
+                json[i].Acumulador = this.memoria[0];
+                if(retorno[1]==="retorne"){ 
+                    json.shift();
+                    i--;
+                } else {
+    
+                    json[i].linea = retorno[1]    
+                    // compara la rafagas con el siguiente programa para saber si se sigue con el programa o no
+                    if (json[i]["Rafaga"] > json[i + 1]["Rafaga"]) {
+                        noTerminados.push(json[i]);
+                        json.shift();
+                        if(json.length==1){    
+                            retorno = programa.runPrograma(this.memoria, json[i].Instruccion, json[i].InfoEtiquetas, json[i].InfoVariables, json[i].linea, json[i].length+3000);
+                        }else{                            
+                            i--;
+                        }
+                    } else {
+                        noTerminados.push(json[i + 1]);
+                        json.splice(i + 1, 1);
+                        if(json.length==1){    
+                            retorno = programa.runPrograma(this.memoria, json[i].Instruccion, json[i].InfoEtiquetas, json[i].InfoVariables, json[i].linea, json[i].length+3000);
+    
+                        }else{                        
+                            i--;
+                        }    
+                    }    
+                }                
+            }    
+            /*
+            una vez que se ejecutaran los programas se organizan por cant de rafaga y se proceden
+            a ejecutar las cantidad de lineas no ejecutadas de cada programa
+            */
+            noTerminados.sort(function (a, b) {
+                return a.Rafaga - b.Rafaga;
+            });
+            for (let i = 0; i < noTerminados.length; i++) {
+                // actualizamos el valor del acumulador.
+                this.memoria[0]=noTerminados[i].Acumulador;
+                // ejecutamos acad uno de los programas.
+                programa.runPrograma(this.memoria, noTerminados[i].Instruccion, noTerminados[i].InfoEtiquetas, noTerminados[i].InfoVariables, noTerminados[i].linea, noTerminados[i].Instruccion.length+300);     
+            }
+        }        
     }
 
 
@@ -274,65 +324,91 @@ export class Procesos {
 
         let ejecutar = new LineaPrueba();
         let json = []
-        console.log("esta es la informacion de cada variable: ---->",this.infoVariables)
-
+        let retorno;
+        let inicio
+        // asignar la informacion a cadad uno de los programas.
         for (let i = 0; i < instrucciones.length; i++) {
             json.push({
                 "Instruccion": instrucciones[i], "Rafaga": this.AsignarRafaga(instrucciones[i]), "Acumulador": 0,
                 "InfoEtiquetas": this.infoEtiquetas[i], "InfoVariables": this.infoVariables[i],
                 "linea": -1,
                 "Index": -1
-            })
-            
+            })            
         }
-        console.table(json)
-        console.log("esta es la informacion de cada programa: ---->",json)
-        let fin;
-        let retorno;
-        let inicio
-        for (let i = 0; i < json.length; i++) {
+        // asiganar el tipo de ejecucion
 
-            alert("esto es l que tiene el json cargado "+json[i].linea)
-            inicio=json[i].linea===-1 ? json[i].linea+1 :  json[i].linea;
-            //inicio = json[i].linea+1;
-            //let inicio = json[i].linea;
+        if (this.tipoEjecucion == 0) {
+
+            for (let i = 0; i < json.length; i++) {
+
+                alert("esto es l que tiene el json cargado "+json[i].linea)
+                inicio=json[i].linea===-1 ? json[i].linea+1 :  json[i].linea;
+                //inicio = json[i].linea+1;
+                //let inicio = json[i].linea;                
+                if (json.length>0) {                
+                    
+                    //actualizamos el valor del acumulador que tiene en el momento el programa
+                    this.memoria[0] = json[i].Acumulador
+                    // ponemos el index donde debe iniciar el programa
+                    ejecutar.setIndex(inicio);
+                    // se ejecuta el programa
+                    await ejecutar.runLineaLinea(this.memoria, json[i].Instruccion, json[i].InfoEtiquetas, json[i].InfoVariables, inicio, quantum);
+                    //actualizamos la memoria.
+                    this.memoria = ejecutar.getMemory();
+    
+                    if(ejecutar.getIndex()=== "retorne1"){ 
+                        //en el caso que el programa se ejecute completamente los sacasmo de la cola.
+                        json.shift();    
+                        i--;
+                    }else{
+                        // actualizamos el valor del la linea en que quedo el programa
+                        json[i].linea = ejecutar.getIndex();        
+                        // actualizamos el acumulador en que quedo el programa
+                        json[i].Acumulador = this.memoria[0];
+                        // se actualizan la cantida de rafagas que quedan
+                        json[i].Rafaga = json[i].Rafaga - quantum;
+                        // pasamos el programa a la cola
+                        let temporal = json.shift();
+                        json.push(temporal)
+                        i--;    
+                    }                    
+                }    
+            }            
             
-            if (json.length>0) {
+        } else {
+            for (let i = 0; i < json.length; i++) {
+
+                alert("esto es l que tiene el json cargado "+json[i].linea)
+                inicio=json[i].linea===-1 ? json[i].linea+1 :  json[i].linea;
                 
-                //fin = this.CalcularInicioyFin(json[i].Instruccion, inicio, quantum);
-                
-                //programa.setAcumulador(json[i].Acumulador);
-                this.memoria[0] = json[i].Acumulador
-
-                //retorno = programa.runPrograma(this.memoria, json[i].Instruccion, json[i].InfoEtiquetas, json[i].InfoVariables, inicio, quantum);
-                ejecutar.setIndex(inicio);
-                await ejecutar.runLineaLinea(this.memoria, json[i].Instruccion, json[i].InfoEtiquetas, json[i].InfoVariables, inicio, quantum);
-                
-                //alert(" esta es la posicion del retorno "+ retorno)
-                //this.memoria = retorno[0];
-                this.memoria = ejecutar.getMemory();
-
-                if(ejecutar.getIndex()=== "retorne1"){ //retorno[1]==="retorne"
-                    json.shift();
-
-                    i--;
-                }else{
-
-                    //json[i].linea = retorno[1]
-                    json[i].linea = ejecutar.getIndex();            
-
-                    console.log(json[i].InfoVariables);
-                    json[i].Acumulador = this.memoria[0];
-                    json[i].Rafaga = json[i].Rafaga - quantum;
-                    let temporal = json.shift();
-                    json.push(temporal)
-                    i--;
-
-                }
-                
-            } 
-
-        }
+                if (json.length>0) {
+                    // actualizacion del valor en la memoria.
+                    this.memoria[0] = json[i].Acumulador
+                    // ejecucion del programa
+                    retorno = programa.runLineaLinea(this.memoria, json[i].Instruccion, json[i].InfoEtiquetas, json[i].InfoVariables, inicio, quantum);
+                    
+                    // actualizamos los valores de la memoria.
+                    this.memoria = retorno[0];
+    
+                    if( retorno[1] === "retorne" ){ 
+                        // sacamos de la lista el programa que se ejecuto por completo.
+                        json.shift();    
+                        i--;
+                    }else{
+                        // actualizar la linea en que quedo en ejecucion el programa.
+                        json[i].linea = retorno[1]
+                        // actualizamos el valor del acumulador en que quedo el programa.
+                        json[i].Acumulador = this.memoria[0];
+                        // actualizacion cantida de rafagas.
+                        json[i].Rafaga = json[i].Rafaga - quantum;
+                        // pasamo el programa a la cola.
+                        let temporal = json.shift();
+                        json.push(temporal)
+                        i--;    
+                    }                    
+                }     
+            }
+        }        
     }
 
 }
