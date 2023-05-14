@@ -5,9 +5,10 @@ export class LineaPrueba {
     infEtiq = []
     infVariable = []
     memory = []
+    cantidadLinea = 0;
 
-    async runLineaLinea(memory, runInstrc, infEtiq, infVariable) {
-        this.index = 0
+    async runLineaLinea(memory, runInstrc, infEtiq, infVariable, inicio, rafaga) {
+        this.index = inicio
         this.instrucciones = []
         this.infEtiq = []
         this.infVariable = []
@@ -16,25 +17,43 @@ export class LineaPrueba {
         this.infEtiq = infEtiq
         this.infVariable = infVariable
         this.memory = memory
-        alert('Valor de memoria -> ' + memory)
+
+        this.index >0 ? this.cantidadLinea = -1: this.cantidadLinea = 0;
+
+        alert('Valor de memoria si entro lienea linea-> '+ inicio)
 
         const box = document.getElementById("box");
-        this.showElement(this.memory, this.instrucciones, this.infEtiq, this.infVariable, this.index);
+        if (this.index==0){
+            this.showElement(this.memory, this.instrucciones, this.infEtiq, this.infVariable, this.index);
+        }
 
         await new Promise((resolve) => {
             document.getElementById("nextButton").addEventListener("click",
-                (e) => {
+                async(e) => {
                     e.preventDefault();
-                    if (this.index >= this.instrucciones.length - 1) {
+                    if (this.index >= this.instrucciones.length - 1 || this.cantidadLinea == rafaga || this.index=="retorne1") {
+
+                        this.cantidadLinea = -1;
                         resolve();
+                    }else{
+                        this.showElement(this.memory, this.instrucciones, this.infEtiq, this.infVariable, this.index);
+                        this.index = this.index + 1;
                     }
-                    this.showElement(memory, this.instrucciones, this.infEtiq, this.infVariable, this.index)
-                    this.index = this.index + 1;
                 });
-            return;
+            return [this.memory,this.index];
         });
+    }
 
+    getMemory(){
+        return this.memory;
+    }
 
+    getIndex(){
+        return this.index;
+    }
+
+    setIndex(index){
+        this.index=index;
     }
 
     // Función para mostrar el elemento del array en el cuadro
@@ -47,7 +66,6 @@ export class LineaPrueba {
     runPrograma(memory, runinstrc, infEtiq, infVariable, posicion) {
 
         // Creamos el objeto para usar la clase de operaciones
-        //let calseOperaciones = new Operaciones();
         console.log("ENTRO A RUNPROGRAMA");
 
         let operaNumeros = ["sume", "reste",
@@ -67,23 +85,28 @@ export class LineaPrueba {
         box.innerHTML = runinstrc[posicion];
 
         // cargar el valor del acumulador.
-
         // correr las instrucciones.
 
         let i = posicion
         console.log("POSICION QUE ENTRO.", i)
+
         let inst = runinstrc[i].split(" ");
+        if( inst[0]!= "nueva" && inst[0]!="etiqueta" && inst[0]!= "retorne" && inst[0]!= "//"){
+                
+            this.cantidadLinea++
+                
+        }
+
         if ((i[0] == '/' && i[1] != '/')) {
             console.log("Es un comentario con el siguiente contenido: --->", i)
         }
 
         else if (inst[0] === "retorne") {
-            console.log("EL PROGRAMA TERMINO")
-            memory[0] = 0;
 
-            if (i = runinstrc.length - 1) {
-                return
-            }
+            alert("termino el programa ")
+            memory[0]=0;
+            this.index = inst[0]
+            return ;
         }
 
         else if (operaNumeros.includes(inst[0])) {
@@ -161,135 +184,10 @@ export class LineaPrueba {
         else {
             console.log("No hace nada");
         }
+
+        return;
     }
 
-
-    creacionVariables(memory) {
-        // arreglo donde se retornara la memoria e infoVariables
-        let retorno = [];
-        // aqui se guardaran las variables que creara el usuario
-        let infVariables = [];
-        // Guardar las variables creadas en memoria
-        // saber hasta que posición se ha utilizado de la memoria 
-        let ultimaPosicion = -1;
-        for (let i = 0; i < memory.length; i++) {
-            if (memory[i] !== undefined) {
-                ultimaPosicion = i;
-            }
-        }
-
-        // filtrar las instricciones que contienen la palabra nueva       
-        const resultados = this.instrucciones.filter((elemento) => elemento.startsWith("nueva"));
-
-        // guardar las variables en memoria
-        resultados.forEach(function (line) {
-
-            let inst = line.split(" ");
-            let tamaño = inst.length
-            let variable
-            let valor
-            // nota: el identificador que tiene la variable es por si se carga otro program y este tiene variables con el mismo nombre.
-            if (tamaño === 3) {
-                if (inst[2] === "I" | inst[2] === "R") {
-                    valor = 0
-                    memory.push(valor)
-                }
-                if (inst[2] === "L") {
-                    valor = false
-                    memory.push(valor)
-                }
-                if (inst[2] === "C") {
-                    valor = " "
-                    memory.push(valor)
-                }
-
-                variable = {
-                    'nombre': inst[1],
-                    'posicion': ultimaPosicion + 1,
-                    'identificador': ultimaPosicion,
-                    'tipo': inst[2],
-                    'valor': valor
-                }
-                infVariables.push(variable)
-
-
-            } else {
-                //console.log("ESTA E SLA MEMORIA NO FUN--->",memory)
-                if (inst[2] === "I") {
-                    valor = parseInt(inst[3])
-                    memory.push(valor)
-                }
-                if (inst[2] === "R") {
-                    valor = parseFloat(inst[3])
-                    memory.push(valor)
-                }
-                if (inst[2] === "L") {
-                    valor = Boolean(inst[3])
-                    memory.push(valor)
-                }
-                if (inst[2] === "C") {
-                    valor = inst[3]
-                    memory.push(valor)
-                }
-
-                variable = {
-                    'nombre': inst[1],
-                    'posicion': ultimaPosicion + 1,
-                    'identificador': ultimaPosicion,
-                    'tipo': inst[2],
-                    'valor': valor
-                }
-                infVariables.push(variable)
-            }
-
-            //console.log("ESTAS SON LAS VARIABLES QUE EXISTEN---->",infVariables)
-            ultimaPosicion++;
-        })
-        retorno.push(memory)
-        retorno.push(infVariables)
-        return retorno;
-
-    }
-
-    crearEtiquetas(memory) {
-
-        // aqui se guardaran las etiquetas que creara el usuario
-        let infEtiqueta = [];
-        // Guardar las variables creadas en memoria
-        // saber hasta que posición se ha utilizado de la memoria 
-        let ultimaPosicion = -1;
-        for (let i = 0; i < memory.length; i++) {
-            if (memory[i] !== undefined) {
-                ultimaPosicion = i;
-            }
-        }
-        //let instruc = this.instrucciones
-        // En este caso se debera recorrer las instrucciones con comentarios incluidos
-        let instruc = this.instComment
-
-        // filtrar las instricciones que contienen la palabra nueva       
-        const resultados = instruc.filter((elemento) => elemento.startsWith("etiqueta"));
-        let etiqueta;
-        // guardar las etiquetas en un arreglo
-        resultados.forEach(function (line) {
-
-            let inst = line.split(" ");
-
-            // nota: el identificador que tiene la variable es por si se carga otro program y este tiene variables con el mismo nombre.
-            let instruEtique = instruc[parseInt(inst[2]) - 1]
-            etiqueta = {
-                'nombre': inst[1],
-                'posicionMemoria': memory.findIndex(elemento => elemento === instruEtique),
-                'identificador': ultimaPosicion,
-                'posicionInstrucciones': inst[2],
-
-            }
-            // gurdar en el arreglo de las etiquetas.
-            infEtiqueta.push(etiqueta)
-            ultimaPosicion++;
-        })
-        return infEtiqueta
-    }
 
     funOperNum(instruccion, memory, infVariable) {
 
@@ -373,126 +271,132 @@ export class LineaPrueba {
 
     }
 
-    funInstruc(instruccion, memory, infVariable) {
+    funInstruc(instruccion,memory,infVariable){
+        
         let retunrCambios = []
-        let inst = instruccion.split(" ");
+        let inst =  instruccion.split(" ");
         let jsonVariable = []
         let nombreVariable
         switch (inst[0]) {
             case "cargue":
-                nombreVariable = inst[1]
-                jsonVariable = infVariable.filter(elemento => elemento.nombre === nombreVariable);
-                if (jsonVariable.length === 0) {
-                    throw new Error(`la variable que se desea cargar no existe`);
-                } else {
-                    memory[0] = jsonVariable[0].valor
-                }
+            nombreVariable = inst[1]
+            
+            jsonVariable = infVariable.filter(elemento => elemento.nombre === nombreVariable);
+            if (jsonVariable.length === 0){
+                throw new Error(`la variable que se desea cargar no existe`);
+            }else{
+                //memory[0] = jsonVariable[0].valor
+                //alert("este valor que tine "+memory[jsonVariable[0].posicion])
+                memory[0] = memory[jsonVariable[0].posicion]
+                document.getElementById('acumulador-value').innerHTML = memory[0];
+            }
 
-                break;
+            break;
             case "almacene":
                 console.log("entro alamacene infoVariables---->", infVariable)
                 nombreVariable = inst[1]
                 jsonVariable = infVariable.filter(elemento => elemento.nombre === nombreVariable);
-                if (jsonVariable.length === 0) {
+                if (jsonVariable.length === 0){
                     throw new Error(`la variable en la que se desea almacenar no existe`);
-                } else {
-                    // Buscamos el elemento
+                }else{
+                    // Buscamos el valor en el json
                     const cambioInfo = infVariable.find(elemento => elemento.nombre === nombreVariable);
 
-                    // Modificamos el valor en el json
+                    // Modificamos se modifica el valor en el json
+                    console.log("ESTE ES EL VALOR AL QUE ESTAMOS ACCEDIENDO ---->", memory[0])
                     cambioInfo.valor = memory[0];
+                    // Modificamos el valor en la memoria
+                    
+                    memory[cambioInfo.posicion] = memory[0]
 
-                    console.log("Veamos si modifico el valor --->", infVariable);
+                    console.log("Veamos si modifico el valor --->",infVariable);
                 }
-                break;
+            break;
             case "lea":
-                // extraemos el nombre de la variable
-                nombreVariable = inst[1]
-                // valor asignar variable
-                let valorVariable = prompt(`Ingrese el valor para la variable ${nombreVariable}`);
-
-                // Buscamos la variable en el json de variables y le cambiamos el valor
-                const cambioInfo = infVariable.find(elemento => elemento.nombre === nombreVariable);
-
-                switch (cambioInfo.tipo) {
-                    case "I":
-                        try {
-                            valorVariable = parseInt(valorVariable);
-                        } catch (error) {
-                            throw new Error(`la variable no es del tipo esperado`);
-                        }
-
-
-                        break;
-                    case "R":
-                        try {
-                            valorVariable = parseFloat(valorVariable);
-                        } catch (error) {
-                            throw new Error(`la variable no es del tipo esperado`);
-                        }
-
-                        break;
-                    case "B":
-                        if (valorVariable == "1" || valorVariable == "true") {
-                            valorVariable = true;
-                        }
-                        else if (valorVariable == "0" || valorVariable == "false") {
-                            valorVariable = false;
-                        } else {
-                            throw new Error(`la variable no es del tipo esperado`);
-                        }
-
-                        break;
-
-                    default:
-                        break;
-                }
-
-                // Modificamos el valor en el json.
-                cambioInfo.valor = valorVariable;
-                // extraemos el valor de la posicion en memoria.
-                let posicionMemoria = cambioInfo.posicion;
-                // Modificamos el valor en memoria.
-                memory[posicionMemoria] = valorVariable;
-
-
+            // extraemos el nombre de la variable
+            nombreVariable = inst[1]
+            // valor asignar variable
+            let valorVariable = prompt(`Ingrese el valor para la variable ${nombreVariable}`);
+            
+            // Buscamos la variable en el json de variables y le cambiamos el valor
+            const cambioInfo = infVariable.find(elemento => elemento.nombre === nombreVariable);
+            
+            switch (cambioInfo.tipo) {
+                case "I":
+                    try {
+                        valorVariable = parseInt(valorVariable);
+                    } catch (error) {
+                        throw new Error(`la variable no es del tipo esperado`);
+                    }
+                    
+                    
+                    break;
+                case "R":
+                    try {
+                        valorVariable = parseFloat(valorVariable);
+                    } catch (error) {
+                        throw new Error(`la variable no es del tipo esperado`);
+                    }
+                
                 break;
+                case "B":
+                    if (valorVariable == "1" || valorVariable == "true"){
+                        valorVariable = true;
+                    }
+                    else if (valorVariable == "0" || valorVariable == "false"){
+                        valorVariable = false;
+                    }else{
+                        throw new Error(`la variable no es del tipo esperado`);
+                    }
+                
+                break;
+            
+                default:
+                    break;
+            }
+            
+            // Modificamos el valor en el json.
+            cambioInfo.valor = valorVariable;
+            // extraemos el valor de la posicion en memoria.
+            let posicionMemoria = cambioInfo.posicion;
+            // Modificamos el valor en memoria.
+            memory[posicionMemoria] = valorVariable;
+            break;
             case "muestre":
                 nombreVariable = inst[1]
                 jsonVariable = infVariable.filter(elemento => elemento.nombre === nombreVariable);
-                if (nombreVariable === "acumulador") {
+                if(nombreVariable === "acumulador"){
                     console.log("la variable tiene el valor impreso", memory[0]);
                 }
-                else if (jsonVariable.length === 0) {
+                else if (jsonVariable.length === 0){
                     throw new Error(`la variable que se desea cargar no existe`);
-                } else {
+                }else{
                     document.getElementById('screen-container').innerHTML = `<p>${jsonVariable[0].valor}</p>`
-                    console.log("la variable tiene el valor en pantalla", jsonVariable[0].valor)
+                    console.log( "la variable tiene el valor en pantalla",jsonVariable[0].valor)
                 }
-                break;
+            break;
             case "imprima":
                 nombreVariable = inst[1]
                 jsonVariable = infVariable.filter(elemento => elemento.nombre === nombreVariable);
-
-                if (nombreVariable === "acumulador") {
+                if(nombreVariable === "acumulador"){
                     console.log("la variable tiene el valor impreso", memory[0]);
                 }
-                else if (jsonVariable.length === 0) {
+                else if (jsonVariable.length === 0){
                     throw new Error(`la variable no existe`);
-                } else {
+                }else{
                     document.getElementById('printer-container').innerHTML = `<p>${jsonVariable[0].valor}</p>`
-                    console.log("la variable tiene el valor impreso", jsonVariable[0].valor)
+                    console.log("la variable tiene el valor impreso",jsonVariable[0].valor)
                 }
-                break;
+            break;            
             default:
-                console.log("No es una instruccion valida");
-                break;
+            console.log("No es una instruccion valida");
+            break;
         }
         retunrCambios.push(memory)
         retunrCambios.push(infVariable)
 
         return retunrCambios;
-
+                    
     }
 
     funLogic(instruccion, memory, infVariable) {
@@ -573,6 +477,51 @@ export class LineaPrueba {
 
     }
 
-    funOperStr(instruccion, memory, infVariable) { }
+    funOperStr(instruccion,memory){
+
+        let inst =  instruccion.split(" ");
+
+        // extraer el valor que viene en el acomulador hasta el momento
+        let valorAcumulador = memory[0];
+        // valor de la instruccion
+        let valorInstruc = inst[1];
+        // guardar el resultado de la operación.
+        let resultado;
+        switch (inst[0]) {
+            case "concatene":                
+                // resultado
+                resultado = valorAcumulador + valorInstruc;
+                
+                break;
+
+            case "elimine":
+                let string = this.acumulador;
+                let substringsToRemove = [valorInstruc];
+
+                let regex = new RegExp(substringsToRemove.join("|"), "g");
+
+                resultado = string.replace(regex, "");
+
+                break;
+            case "extraiga":
+                // extraer de la instruccion la cantidad de caracteres a extraer
+                let cantCarac = parseInt(valorInstruc)
+                if (!isNaN(cantCarac)) {
+                    resultado = valorAcumulador.substring(0, cantCarac);
+                    
+                }else{
+                    throw new Error(`el parametro pasado a la funcion "extraiga" no es valido`);
+                }
+                
+                break;
+        
+            default:
+                break;            
+        }
+        // cambiamos el valor del acumulador en la memoria
+        memory[0] = resultado;
+        document.getElementById('acumulador-value').innerHTML = memory[0]; 
+        return memory
+    }
 
 }

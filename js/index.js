@@ -2,6 +2,7 @@ import { lineByLineFileReader } from "./model/file.js";
 import { Validation } from "./model/validation.js";
 import { Interprete } from "./model/interprete.js";
 import { LineaPrueba } from "./model/lineaprueba.js";
+import { Procesos } from "./model/process.js";
 
 
 
@@ -16,6 +17,26 @@ form.addEventListener('submit', async (e) => {
 	let instrucciones = [];
 	let infEtiquetas = [];
 	let infoVariables = [];
+
+	// creacion de la memoria con su kernel 
+	// 1. creacion del kernel
+	const kernel = new Array(5).fill('Derly`s kernel');
+	// creacion de la memoria con su tamaño correspondiente
+	const memory = new Array();
+	// agregamos el acumulador en la posicion cero
+	memory.push(0) 
+	// cargamos el kernel a la memoria
+	memory.push(kernel)
+	// creamos la nueva memoria
+	let nuevo = [].concat(...memory);
+	
+	// tamaño de la memoria
+	const tamanioMemoria = 1000 + kernel.length
+
+	// creacion del objeto que se utilizara para el cargue corriespondiente de los programas
+	programa = new Interprete(nuevo, [], [], tamanioMemoria);
+
+
 	memoryContainer.innerHTML = ''
 	for (let index = 0; index < fileInput.files.length; index++) {
 		const file = fileInput.files[index];
@@ -32,19 +53,14 @@ form.addEventListener('submit', async (e) => {
 			// obtener un  array con el programa sin comentarios y haciendo verificación de sintaxis.
 			let fileContent = validation.validSintaxis();
 			console.log("Esto es lo que hay sin comentarios----->", fileContent)
-			//intepretar lo que vendria siendo hasta el momento el program
-			// Nota: para e ste caso se enviaria el programa con comentarios incluidos.
-			// se crea el objeto enviando la memoria y el kernel, ademas de las instruccion
-			// con comentarios y las que no tiene comentarios.
-			const memory = new Array();
-			// crear el array del  kernel
-			const kernel = new Array(5).fill('Derly`s kernel');
-			const tamanioMemoria = 1000
-			programa = new Interprete([], fileContent, lines, kernel, tamanioMemoria);
-			// se procede a ejecutar el programa.
 
-			correrPrograma = programa.cargarPrograma(memoria, index);
-			memoria = [...memoria, ...correrPrograma[0]]
+			// cambiamos el contenido que tendra el filecontent y las lineas
+			programa.setInstrucciones(fileContent)
+			programa.setInstComment(lines)
+
+
+			correrPrograma = programa.cargarPrograma(memoria);
+			//memoria = [...memoria, ...correrPrograma[0]]
 			for (let i = 0; i < lines.length; i++) {
 				document.getElementById('instructions-container').innerHTML += `<p class="">${(i+1)+'. '+lines[i]}</p>`
 				
@@ -66,13 +82,30 @@ form.addEventListener('submit', async (e) => {
 			console.error(err);
 		}
 	}
+	memoria = correrPrograma[0]
 	// llama una funcion que se encarga de de correr el programa ya sea linea a line o de corrido.
 	runProg(memoria, instrucciones, infEtiquetas, infoVariables, e, programa)
-
-
 });
 
+
 async function runProg(memoria, instrucciones, infEtiquetas, infoVariables, e, programa) {
+	let contador = 0
+	memoria.forEach(memoriaText => {
+		memoryContainer.innerHTML += `<p>${contador} . ${memoriaText}</p>`
+		contador++
+	})
+	contador = 0
+	let proceso;
+	if (e.submitter.id == 'submit-btn') {
+		proceso = new Procesos(memoria,infEtiquetas,infoVariables,1)
+	} else {
+		proceso = new Procesos(memoria,infEtiquetas,infoVariables,0)
+	}
+	proceso.ElegirMetodo(instrucciones,3, 4, programa)
+
+}
+
+/*async function runProg(memoria, instrucciones, infEtiquetas, infoVariables, e, programa) {
 	let linea = new LineaPrueba();
 	let contador = 0
 	memoria.forEach(memoriaText => {
@@ -88,7 +121,7 @@ async function runProg(memoria, instrucciones, infEtiquetas, infoVariables, e, p
 				// ...
 				programa.runPrograma(memoria, instrucciones[index], infEtiquetas[index], infoVariables[index]);
 				alert("Termino la  ejecucion del programa numero "+(index+1))
-			}, 10000); // 10000 milisegundos = 10 segundos
+			}, 3000); // 10000 milisegundos = 10 segundos
 			
 		} else {
 			await linea.runLineaLinea(memoria, instrucciones[index], infEtiquetas[index], infoVariables[index]);
@@ -98,7 +131,7 @@ async function runProg(memoria, instrucciones, infEtiquetas, infoVariables, e, p
 			document.getElementById("box").innerHTML = 'Terminó la ejrcución corretamente'
 		}
 	}
-}
+}*/
 
 
 

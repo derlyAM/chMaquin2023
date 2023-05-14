@@ -2,19 +2,27 @@ import "./operaciones.js";
 
 export class Interprete {
     
-    constructor(memoria, instrucciones, instComment,kernel, tamanioMemoria){
+    constructor(memoria, instrucciones, instComment, tamanioMemoria){
         this.memoria = memoria;
         this.instrucciones = instrucciones;
-        this.kernel = kernel;
+        //this.kernel = kernel;
         this.instComment = instComment;
         this.tamanioMemoria = tamanioMemoria
     }
+
+    setInstrucciones(instrucciones){
+        this.instrucciones=instrucciones
+    }
+
+    setInstComment(instComment){
+        this.instComment = instComment
+    }
     
 
-    cargarPrograma(memoria1,indicador){
+    cargarPrograma(memoria1){
         // inicializar el valor del acomulador
         // este siempre va en la posicion cero de la memoria
-        if(indicador==0){
+        /*if(indicador==0){
         let acumulador = 0;       
         
         // guardar el acomulador
@@ -22,6 +30,7 @@ export class Interprete {
         // cargar el kernel en memoria 
         this.memoria = this.memoria.concat(this.kernel);
         }
+        */
         // cargar las intrucciones en memoria
         this.memoria = this.memoria.concat(this.instrucciones);
         console.log("esto tiene la memoria--->",this.memoria)
@@ -50,10 +59,6 @@ export class Interprete {
         let returnEti = this.crearEtiquetas(memoria1);
         // actualizamos memoria y info de variables        
         infEtiq = returnEti
-        
-        console.log("ESTA ES LA MEMORIA----->",memoria1)
-        console.log("AQUI DEBERIA ESTAR TODA LA INFO DE LAS ETIQUETAAS----->",infEtiq)
-        console.log("AQUI DEBERIA ESTAR TODA LA INFO DE LAS VARIALES----->",infVariable)
         let runInstrc = this.instComment
         let returnArray=[memoria1,runInstrc,infEtiq,infVariable];
         
@@ -63,11 +68,12 @@ export class Interprete {
         
     }
 
-    runPrograma(memory, runinstrc, infEtiq, infVariable){
-
+    runPrograma(memory, runinstrc, infEtiq, infVariable, inicio, rafaga){
+        
         // Creamos el objeto para usar la clase de operaciones
         //let calseOperaciones = new Operaciones();
         console.log("ENTRO A RUNPROGRAMA");
+        console.log("ENTRO A RUNPROGRAMA CON INSTRUCCIONES---->",runinstrc);
 
         let operaNumeros = ["sume","reste",
                             "multiplique",
@@ -83,20 +89,36 @@ export class Interprete {
         let ciclos = ["vaya","vayasi"]
 
         // cargar el valor del acumulador.
+        //contar la cantidad de lineas en caso de enconetrarse en un ciclo
+        let linea = inicio;
+        let conteoLineas = -1;
         
         // correr las instrucciones.
-        for (let i = 0; i < runinstrc.length; i++) {
+        for (let i = inicio; i < runinstrc.length ; i++) {
+
+            alert("LINEA EN LA QUE VA "+runinstrc[i])
+            
+
+            console.log("esto es lo que tiene la linea--------->",runinstrc[i])
+            
             let inst =  runinstrc[i].split(" ");
+            if( inst[0]!= "nueva" && inst[0]!="etiqueta" && inst[0]!= "retorne" && inst[0]!= "//"){
+                
+                conteoLineas++
+                
+            }
             if ((i[0] == '/' && i[1] != '/')){
-                console.log("Es un comentario con el siguiente contenido: --->",i)
+                //console.log("Es un comentario con el siguiente contenido: --->",i)
             }
 
             else if (inst[0]==="retorne"){
-                console.log("EL PROGRAMA TERMINÓ")
-                memory[0]=0;
-                if(i=runinstrc.length-1){
-                    return
-                }
+                //linea = i;
+                console.log("EL PROGRAMA TERMINÓ con la linea ---->",linea)
+
+                    alert("termino el programa ")
+                    memory[0]=0;
+                    //i = runinstrc.length;
+                    return [memory,inst[0]];
             }
 
             else if (operaNumeros.includes(inst[0])){
@@ -148,7 +170,7 @@ export class Interprete {
                             console.log(jsonEtiquetaUno[0].posicionInstrucciones)
                         }
                         else if(memory[0]<0){
-                            i=parseInt(jsonEtiquetaUno[0].posicionInstrucciones)-2;
+                            i=parseInt(jsonEtiquetaDos[0].posicionInstrucciones)-2;
                         }
                         
                         
@@ -168,8 +190,20 @@ export class Interprete {
                 console.log("ERROR EN LA LECTURA DE INSTRUCCIONES LINE 135 INTERPRETE");
             }
 
+            console.log("ESTE ES EL VALOR DEL ACOMULADOR------>",memory[0])
+            console.log("ES LA MANERA QUE QUEDA LA MEMORIA ---->", memory)
+
+            if(conteoLineas>=rafaga){
+                alert("entro conteo lineas ---> "+ i+ " ESTE CONTEO LINEAS "+ conteoLineas)
+                return [memory,i+1];
+                
+            }
+
         }
 
+        
+
+        
 
     }   
 
@@ -387,6 +421,7 @@ export class Interprete {
     }
 
     funInstruc(instruccion,memory,infVariable){
+        
         let retunrCambios = []
         let inst =  instruccion.split(" ");
         let jsonVariable = []
@@ -394,11 +429,12 @@ export class Interprete {
         switch (inst[0]) {
             case "cargue":
             nombreVariable = inst[1]
+            
             jsonVariable = infVariable.filter(elemento => elemento.nombre === nombreVariable);
             if (jsonVariable.length === 0){
                 throw new Error(`la variable que se desea cargar no existe`);
             }else{
-                memory[0] = jsonVariable[0].valor
+                memory[0] = memory[jsonVariable[0].posicion]
                 document.getElementById('acumulador-value').innerHTML = memory[0];
             }
 
@@ -410,11 +446,16 @@ export class Interprete {
                 if (jsonVariable.length === 0){
                     throw new Error(`la variable en la que se desea almacenar no existe`);
                 }else{
-                    // Buscamos el estudiante con el nombre "Juan"
+                    // Buscamos el valor en el json
                     const cambioInfo = infVariable.find(elemento => elemento.nombre === nombreVariable);
 
-                    // Modificamos la carrera del estudiante Juan
+                    // Modificamos se modifica el valor en el json
+                    console.log("ESTE ES EL VALOR AL QUE ESTAMOS ACCEDIENDO ---->", memory[0])
                     cambioInfo.valor = memory[0];
+                    // Modificamos el valor en la memoria
+                    
+                    memory[cambioInfo.posicion] = memory[0]
+
 
                     console.log("Veamos si modifico el valor --->",infVariable);
                 }
@@ -480,6 +521,8 @@ export class Interprete {
                 }else{
                     document.getElementById('screen-container').innerHTML = `<p>${jsonVariable[0].valor}</p>`
                     console.log( "la variable tiene el valor en pantalla",jsonVariable[0].valor)
+                    alert("valor que se tiene" + jsonVariable[0].valor);
+                    
                 }
             break;
             case "imprima":
@@ -487,12 +530,14 @@ export class Interprete {
                 jsonVariable = infVariable.filter(elemento => elemento.nombre === nombreVariable);
                 if(nombreVariable === "acumulador"){
                     console.log("la variable tiene el valor impreso", memory[0]);
+                    
                 }
                 else if (jsonVariable.length === 0){
                     throw new Error(`la variable no existe`);
                 }else{
                     document.getElementById('printer-container').innerHTML = `<p>${jsonVariable[0].valor}</p>`
                     console.log("la variable tiene el valor impreso",jsonVariable[0].valor)
+                    alert("valor que se tiene" + jsonVariable[0].valor);
                 }
             break;            
             default:
